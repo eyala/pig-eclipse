@@ -1,0 +1,15 @@
+AVG
+BinaryDeserializer
+BinarySerializer
+BinStorage
+CONCAT
+COUNT
+DIFF
+MIN
+MAX
+PigDump
+PigStorage
+SIZE
+SUM
+TextLoader
+TOKENIZE
