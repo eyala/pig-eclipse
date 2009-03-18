@@ -31,7 +31,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 //			File file=new File(".");
 //			System.out.println(file.getAbsolutePath());
 			BufferedReader reader = new BufferedReader(new FileReader(
-					"D:/Code/workspace/org.apache.pig.contrib.eclipse/data/keywords.txt"));
+					"D:/Code/Java/workspace/org.apache.pig.contrib.eclipse/data/keywords.txt"));
 			
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -42,7 +42,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 			}
 			reader.close();
 
-			reader = new BufferedReader(new FileReader("D:/Code/workspace/org.apache.pig.contrib.eclipse/data/builtin_fun.txt"));
+			reader = new BufferedReader(new FileReader("D:/Code/Java/workspace/org.apache.pig.contrib.eclipse/data/builtin_fun.txt"));
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				if (line.length() != 0) {
