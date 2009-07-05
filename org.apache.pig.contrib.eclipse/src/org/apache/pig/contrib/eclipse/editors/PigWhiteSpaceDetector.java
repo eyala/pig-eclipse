@@ -6,7 +6,6 @@ public class PigWhiteSpaceDetector implements IWhitespaceDetector {
 
 	@Override
 	public boolean isWhitespace(char c) {
-		// TODO Auto-generated method stub
 		return Character.isWhitespace(c);
 	}
 

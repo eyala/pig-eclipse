@@ -1,14 +1,15 @@
 package org.apache.pig.contrib.eclipse.editors;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.pig.contrib.eclipse.PigActivator;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
@@ -28,11 +29,11 @@ public class PigScriptScanner extends RuleBasedScanner {
 
 	static {
 		try {
-//			File file=new File(".");
-//			System.out.println(file.getAbsolutePath());
-			BufferedReader reader = new BufferedReader(new FileReader(
-					"D:/Code/Java/workspace/org.apache.pig.contrib.eclipse/data/keywords.txt"));
-			
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					PigActivator.getDefault().openStream(
+							new Path("data/keywords.txt"))));
+
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
@@ -42,7 +43,8 @@ public class PigScriptScanner extends RuleBasedScanner {
 			}
 			reader.close();
 
-			reader = new BufferedReader(new FileReader("D:/Code/Java/workspace/org.apache.pig.contrib.eclipse/data/builtin_fun.txt"));
+			reader = new BufferedReader(new InputStreamReader(PigActivator
+					.getDefault().openStream(new Path("data/builtin_fun.txt"))));
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
 				if (line.length() != 0) {
