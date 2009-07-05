@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Display;
 public class PigColorProvider {
 	
 	
-	public static final RGB RAWString = new RGB(135,206,235);
+	public static final RGB RAWSTRING = new RGB(135,206,235);
 
 	/**
 	 * brown

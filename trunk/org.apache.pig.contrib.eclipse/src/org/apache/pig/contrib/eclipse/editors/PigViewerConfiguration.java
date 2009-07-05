@@ -22,7 +22,6 @@ public class PigViewerConfiguration extends SourceViewerConfiguration {
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer) {
 
-		PigColorProvider provider= PigActivator.getDefault().getColorProvider();
 		PresentationReconciler reconciler= new PresentationReconciler();
 		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		
