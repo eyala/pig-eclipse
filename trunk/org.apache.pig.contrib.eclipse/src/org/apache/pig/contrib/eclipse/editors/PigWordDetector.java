@@ -6,7 +6,6 @@ public class PigWordDetector implements IWordDetector {
 
 	@Override
 	public boolean isWordPart(char c) {
-		// TODO Auto-generated method stub
 		if (c=='.'){
 			return true;
 		}
@@ -15,7 +14,6 @@ public class PigWordDetector implements IWordDetector {
 
 	@Override
 	public boolean isWordStart(char c) {
-		// TODO Auto-generated method stub
 		return Character.isJavaIdentifierStart(c);
 	}
 	

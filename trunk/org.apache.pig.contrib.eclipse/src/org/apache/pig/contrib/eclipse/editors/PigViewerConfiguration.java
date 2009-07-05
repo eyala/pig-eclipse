@@ -1,5 +1,6 @@
 package org.apache.pig.contrib.eclipse.editors;
 
+import org.apache.pig.contrib.eclipse.PigActivator;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ContentAssistant;
 import org.eclipse.jface.text.contentassist.IContentAssistant;
@@ -14,7 +15,6 @@ public class PigViewerConfiguration extends SourceViewerConfiguration {
 	
 	@Override
 	public int getTabWidth(ISourceViewer sourceViewer) {
-		// TODO Auto-generated method stub
 		return 4;
 	}
 	
@@ -22,11 +22,11 @@ public class PigViewerConfiguration extends SourceViewerConfiguration {
 	public IPresentationReconciler getPresentationReconciler(
 			ISourceViewer sourceViewer) {
 
-		PigColorProvider provider= PigPlugin.getDefault().getColorProvider();
+		PigColorProvider provider= PigActivator.getDefault().getColorProvider();
 		PresentationReconciler reconciler= new PresentationReconciler();
 		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 		
-		DefaultDamagerRepairer dr= new DefaultDamagerRepairer(PigPlugin.getDefault().getCodeScanner());
+		DefaultDamagerRepairer dr= new DefaultDamagerRepairer(PigActivator.getDefault().getCodeScanner());
 		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 		
