@@ -29,7 +29,6 @@ public class PigScriptScanner extends RuleBasedScanner {
 
 	static {
 		try {
-
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					PigActivator.getDefault().openStream(
 							new Path("data/keywords.txt"))));
@@ -66,7 +65,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 		IToken builtinFunToken = new Token(new TextAttribute(colorProvider
 				.getColor(PigColorProvider.BUILTIN_FUN)));
 		IToken stringToken = new Token(new TextAttribute(colorProvider
-				.getColor(PigColorProvider.RAWString)));
+				.getColor(PigColorProvider.RAWSTRING)));
 		IToken defaultToken = new Token(new TextAttribute(colorProvider
 				.getColor(PigColorProvider.DEFAULT)));
 
