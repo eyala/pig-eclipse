@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.apache.pig.contrib.eclipse.feature_1.0.1.jar" id="org.apache.pig.contrib.eclipse.feature" version="1.0.1">
+      <category name="org.apache.pig.contrib.eclipse.category"/>
+   </feature>
+   <category-def name="org.apache.pig.contrib.eclipse.category" label="Pig-Eclipse">
+      <description>
+         Lightweight Pig plug in for Eclipse
+      </description>
+   </category-def>
+</site>
