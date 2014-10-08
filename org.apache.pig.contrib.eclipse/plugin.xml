@@ -14,40 +14,6 @@
       </editor>
    </extension>
    <extension
-         id="org.apache.pig.contrib.eclipse.editorContribution"
-         name="PigEditor"
-         point="org.eclipse.ui.editorActions">
-      <editorContribution
-            id="org.apache.pig.contrib.eclipse.editor.editContribution"
-            targetID="org.apache.pig.contrib.eclipse.pigEditor">
-         <menu
-               id="org.apache.pig.contrib.eclipse.menu.sourceMenu"
-               label="Source"
-               path="edit">
-            <separator
-                  name="editGroup">
-            </separator>
-         </menu>
-         <action
-               class="org.apache.pig.contrib.eclipse.actions.PigComment"
-               definitionId="org.apache.pig.contrib.eclipse.actions.comment"
-               id="org.apache.pig.contrib.eclipse.actions.comment"
-               label="Comment"
-               menubarPath="org.apache.pig.contrib.eclipse.menu.sourceMenu/editGroup"
-               style="push">
-         </action>
-      </editorContribution>
-   </extension>
-   <extension
-         point="org.eclipse.ui.bindings">
-      <key
-            commandId="org.apache.pig.contrib.eclipse.actions.comment"
-            contextId="org.eclipse.ui.textEditorScope"
-            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
-            sequence="Ctrl+-">
-      </key>
-   </extension>
-   <extension
          point="org.eclipse.ui.contexts">
       <context
             id="org.apache.pig.contrib.eclipse.editor.scope"
@@ -55,17 +21,4 @@
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
-   <extension
-         point="org.eclipse.ui.commands">
-      <command
-            categoryId="org.apache.pig.contrib.eclipse.commands.category"
-            id="org.apache.pig.contrib.eclipse.actions.comment"
-            name="Comment/UnComment">
-      </command>
-      <category
-            id="org.apache.pig.contrib.eclipse.commands.category"
-            name="PigCommandCategory">
-      </category>
-   </extension>
-
 </plugin>

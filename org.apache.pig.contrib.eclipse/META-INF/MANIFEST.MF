@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse Plug-in
+Bundle-Name: Pig Latin Eclipse Plug-in
 Bundle-SymbolicName: org.apache.pig.contrib.eclipse; singleton:=true
 Bundle-Version: 1.0.1
 Bundle-Activator: org.apache.pig.contrib.eclipse.PigActivator
-Bundle-Vendor: Jeff Zhang
+Bundle-Vendor: Jeff Zhang and Eyal Allweil
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jface.text,
