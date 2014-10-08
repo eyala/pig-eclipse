@@ -2,7 +2,7 @@
 <feature
       id="org.apache.pig.contrib.eclipse.feature"
       label="Pig-Eclipse"
-      version="1.0.1">
+      version="1.0.1.qualifier">
 
    <description url="https://code.google.com/p/pig-eclipse/">
       Pig Latin script editor for Eclipse. Does syntax highlighting for files with .pig extension.
@@ -99,7 +99,7 @@
    </license>
 
    <url>
-      <update label="Pig-Eclipse Update Site From SVN Repository" url="https://code.google.com/p/pig-eclipse/source/browse/trunk/update_site"/>
+      <update label="Pig-Eclipse Update Site From SVN Repository" url="https://pig-eclipse.googlecode.com/svn/trunk/update_site"/>
    </url>
 
    <plugin
