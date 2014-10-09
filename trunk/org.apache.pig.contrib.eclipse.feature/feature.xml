@@ -4,9 +4,17 @@
       label="Pig-Eclipse"
       version="1.0.1.qualifier">
 
-   <description url="https://code.google.com/p/pig-eclipse/">
+	<description url="https://code.google.com/p/pig-eclipse/">
       Pig Latin script editor for Eclipse. Does syntax highlighting for files with .pig extension.
-   </description>
+	</description>
+
+	<url>
+		<update label="Pig-Eclipse Update Site From SVN Repository" url="https://pig-eclipse.googlecode.com/svn/trunk/update_site"/>
+	</url>
+	
+	<plugin
+		id="org.apache.pig.contrib.eclipse" download-size="25" install-size="0" version="1.0.1.qualifier" unpack="false"/>
+	
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Public License - v 1.0
@@ -97,16 +105,4 @@
   
   This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
    </license>
-
-   <url>
-      <update label="Pig-Eclipse Update Site From SVN Repository" url="https://pig-eclipse.googlecode.com/svn/trunk/update_site"/>
-   </url>
-
-   <plugin
-         id="org.apache.pig.contrib.eclipse"
-         download-size="25"
-         install-size="0"
-         version="1.0.1"
-         unpack="false"/>
-
 </feature>
