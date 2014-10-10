@@ -1,0 +1,23 @@
+#summary A list of previous releases and planned features for upcoming releases
+
+= Upcoming Release =
+
+== 1.0.2 / November 2014 ==
+
+  * Case sensitivity for built-in functions (currently they are case insensitive)
+  * Return of commenting functionality
+  * Updated Pig 0.12 keywords/functions 
+
+= Past Releases =
+
+== 1.0.1 / October 2014 ==
+
+  * Updated for Pig 0.11
+  * Separate color scheme for keywords, built-in functions and data types
+  * Commenting functionality temporarily removed.
+
+== 1.0.0 / July 2009 ==
+
+  * Initial release
+  * Simple syntax highlighting
+  * comment/uncomment functionality
