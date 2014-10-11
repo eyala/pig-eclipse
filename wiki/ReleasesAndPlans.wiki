@@ -1,4 +1,5 @@
 #summary A list of previous releases and planned features for upcoming releases
+#labels Featured,Phase-Requirements
 
 = Upcoming Release =
 
