@@ -8,9 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.pig.contrib.eclipse.PigActivator;
+import org.apache.pig.contrib.eclipse.PigPreferences;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
@@ -22,6 +26,9 @@ import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
 import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 
 public class PigScriptScanner extends RuleBasedScanner {
 
@@ -29,13 +36,12 @@ public class PigScriptScanner extends RuleBasedScanner {
 	private static Set<String> BUILTIN_FUN;
 	private static Set<String> DATA_TYPES;
 
-
-	static {
+	public static void loadResources() {
 		KEYWORDS = readFromResources("keywords.txt");
 		BUILTIN_FUN = readFromResources("builtin_fun.txt");
 		DATA_TYPES = readFromResources("data_types.txt");
 	}
-
+	
 	private static Set<String> readFromResources(String path) {
 		Set<String> result= new HashSet<String>();
 		
@@ -69,27 +75,29 @@ public class PigScriptScanner extends RuleBasedScanner {
 		return result;
 	}
 	
-	public PigScriptScanner(PigColorProvider colorProvider) {
+	public PigScriptScanner() {
 		
+		IPreferenceStore store = PigActivator.getDefault().getPreferenceStore();
 		
-		IToken keywordToken = new Token(new TextAttribute(colorProvider
-				.getColor(PigColorProvider.KEYWORD), null, SWT.BOLD));
-		IToken commentToken = new Token(new TextAttribute(colorProvider
-				.getColor(PigColorProvider.COMMENT)));
-		IToken builtinFunToken = new Token(new TextAttribute(colorProvider
-				.getColor(PigColorProvider.BUILTIN_FUN)));
-		IToken stringToken = new Token(new TextAttribute(colorProvider
-				.getColor(PigColorProvider.RAWSTRING)));
-		IToken defaultToken = new Token(new TextAttribute(colorProvider
-				.getColor(PigColorProvider.DEFAULT)));
-		IToken dataTypeToken = new Token(new TextAttribute(colorProvider
-				.getColor(PigColorProvider.DATA_TYPE)));
+		loadResources();
+		
+		IToken keywordToken = new Token(new TextAttribute(getColor(PreferenceConverter.getColor(store, PigPreferences.COLOR_KEYWORDS)), null, SWT.BOLD));
+		
+		IToken commentToken = new Token(new TextAttribute(getColor(PreferenceConverter.getColor(store, PigPreferences.COLOR_COMMENTS))));
+		
+		IToken builtinFunToken = new Token(new TextAttribute(getColor(PreferenceConverter.getColor(store, PigPreferences.COLOR_BUILTINS))));
+
+		IToken constantToken = new Token(new TextAttribute(getColor(PreferenceConverter.getColor(store, PigPreferences.COLOR_CONSTANTS))));
+
+		IToken defaultToken = new Token(new TextAttribute(getColor(PreferenceConverter.getColor(store, PigPreferences.COLOR_DEFAULT))));
+
+		IToken dataTypeToken = new Token(new TextAttribute(getColor(PreferenceConverter.getColor(store, PigPreferences.COLOR_DATATYPES))));
 
 		List<IRule> rules = new ArrayList<IRule>();
 
 		rules.add(new EndOfLineRule("--", commentToken)); //$NON-NLS-1$
 
-		rules.add(new SingleLineRule("'", "'", stringToken, '\\')); //$NON-NLS-2$ //$NON-NLS-1$
+		rules.add(new SingleLineRule("'", "'", constantToken, '\\')); //$NON-NLS-2$ //$NON-NLS-1$
 
 		rules.add(new MultiLineRule("/*", "*/", commentToken)); //$NON-NLS-2$ //$NON-NLS-1$
 		
@@ -98,7 +106,6 @@ public class PigScriptScanner extends RuleBasedScanner {
 
 		// Add word rule for keywords, built in functions, and data types
 		WordRule wordRule = new WordRule(new PigWordDetector(), defaultToken, true);
-
 		for (String keyword : KEYWORDS)
 			wordRule.addWord(keyword, keywordToken);
 
@@ -112,4 +119,9 @@ public class PigScriptScanner extends RuleBasedScanner {
 		
 		setRules(rules.toArray(new IRule[rules.size()]));
 	}
+	
+	private static Color getColor(RGB rgb){
+		return new Color(Display.getCurrent(),rgb);
+	}
+
 }

@@ -21,4 +21,18 @@
             parentId="org.eclipse.ui.contexts.window">
       </context>
    </extension>
+    <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="org.apache.pig.contrib.eclipse.PigDefaultPreferences">
+      </initializer>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      	<page
+            class="org.apache.pig.contrib.eclipse.PigPreferences"
+            id="org.apache.pig.contrib.eclipse.PigPreferences"
+            name="Pig">
+      </page>
+   </extension>
 </plugin>
