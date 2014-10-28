@@ -1,6 +1,5 @@
 package org.apache.pig.contrib.eclipse;
 
-import org.apache.pig.contrib.eclipse.editors.PigColorProvider;
 import org.apache.pig.contrib.eclipse.editors.PigScriptScanner;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -17,15 +16,12 @@ public class PigActivator extends AbstractUIPlugin {
 	// The shared instance
 	private static PigActivator plugin;
 
-	private PigColorProvider colorProvider;
-
 	private PigScriptScanner codeScanner;
 
 	/**
 	 * The constructor
 	 */
-	public PigActivator() {
-	}
+	public PigActivator() {}
 
 	/*
 	 * (non-Javadoc)
@@ -72,15 +68,9 @@ public class PigActivator extends AbstractUIPlugin {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 
-	public PigColorProvider getColorProvider() {
-		if (colorProvider == null)
-			colorProvider = new PigColorProvider();
-		return colorProvider;
-	}
-
 	public PigScriptScanner getCodeScanner() {
 		if (codeScanner == null) {
-			codeScanner = new PigScriptScanner(getColorProvider());
+			codeScanner = new PigScriptScanner();
 		}
 		return codeScanner;
 	}

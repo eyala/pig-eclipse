@@ -45,12 +45,4 @@ public class StringUtil {
         return ret;
 
     }
-    
-    public static void main(String[] args) {
-		String str="zjf\r\n ppt\r\n";
-		List<String> lines=StringUtil.splitInLines(str);
-		for (String line: lines){
-			System.out.println(line);
-		}
-	}
 }
