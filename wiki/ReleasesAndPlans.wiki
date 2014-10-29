@@ -1,17 +1,19 @@
 #summary A list of previous releases and planned features for upcoming releases
 #labels Featured,Phase-Requirements
 
-= Upcoming Release =
+= Upcoming Release / TODO =
 
-== 1.0.2 / November 2014 ==
-
-  * Case sensitivity for built-in functions (currently they are case insensitive)
+  * Pig 0.12 support
   * Return of commenting functionality
-  * Updated Pig 0.12 keywords/functions 
 
 = Past Releases =
 
-== 1.0.1 / October 2014 ==
+== 1.0.2 / October 29th, 2014 ==
+
+  * Case sensitivity for built-in functions
+  * Preferences page where you can modify the color scheme
+
+== 1.0.1 / October 9th, 2014 ==
 
   * Updated for Pig 0.11
   * Separate color scheme for keywords, built-in functions and data types
