@@ -1,6 +1,7 @@
 package org.apache.pig.contrib.eclipse.editors;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 import org.apache.pig.contrib.eclipse.PigActivator;
 import org.apache.pig.contrib.eclipse.PigPreferences;
+import org.apache.pig.contrib.eclipse.WordRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -20,11 +22,11 @@ import org.eclipse.jface.text.rules.EndOfLineRule;
 import org.eclipse.jface.text.rules.IRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
+import org.eclipse.jface.text.rules.NumberRule;
 import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
-import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -48,7 +50,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 		BufferedReader reader = null;
 		
 		try {
-			reader = new BufferedReader(new InputStreamReader(FileLocator.openStream(Platform.getBundle("org.apache.pig.contrib.eclipse"), new Path("data/" + path ), false)));
+			reader = new BufferedReader(new InputStreamReader(FileLocator.openStream(Platform.getBundle("org.apache.pig.contrib.eclipse"), new Path("data" + File.separator + path ), false)));
 
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -98,6 +100,8 @@ public class PigScriptScanner extends RuleBasedScanner {
 		rules.add(new EndOfLineRule("--", commentToken)); //$NON-NLS-1$
 
 		rules.add(new SingleLineRule("'", "'", constantToken, '\\')); //$NON-NLS-2$ //$NON-NLS-1$
+		
+		rules.add(new NumberRule(constantToken));
 
 		rules.add(new MultiLineRule("/*", "*/", commentToken)); //$NON-NLS-2$ //$NON-NLS-1$
 		
@@ -110,7 +114,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 			wordRule.addWord(keyword, keywordToken);
 
 		for (String func : BUILTIN_FUN)
-			wordRule.addWord(func, builtinFunToken);
+			wordRule.addWord(func, builtinFunToken, false);
 
 		for (String datatype : DATA_TYPES)
 			wordRule.addWord(datatype, dataTypeToken);

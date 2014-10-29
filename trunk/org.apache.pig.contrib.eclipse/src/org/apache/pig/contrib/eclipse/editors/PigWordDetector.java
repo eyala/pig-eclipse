@@ -16,10 +16,4 @@ public class PigWordDetector implements IWordDetector {
 	public boolean isWordStart(char c) {
 		return Character.isJavaIdentifierStart(c);
 	}
-	
-	public static void main(String[] args) {
-		PigWordDetector detector=new PigWordDetector();
-		System.out.println(detector.isWordStart('.'));
-	}
-
 }
