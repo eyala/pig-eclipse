@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.apache.pig.contrib.eclipse.PigActivator;
 import org.apache.pig.contrib.eclipse.PigPreferences;
-import org.apache.pig.contrib.eclipse.WordRule;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -27,6 +26,7 @@ import org.eclipse.jface.text.rules.RuleBasedScanner;
 import org.eclipse.jface.text.rules.SingleLineRule;
 import org.eclipse.jface.text.rules.Token;
 import org.eclipse.jface.text.rules.WhitespaceRule;
+import org.eclipse.jface.text.rules.WordRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
@@ -108,18 +108,25 @@ public class PigScriptScanner extends RuleBasedScanner {
 		// Add generic whitespace rule.
 		rules.add(new WhitespaceRule(new PigWhiteSpaceDetector()));
 
-		// Add word rule for keywords, built in functions, and data types
-		WordRule wordRule = new WordRule(new PigWordDetector(), defaultToken, true);
-		for (String keyword : KEYWORDS)
-			wordRule.addWord(keyword, keywordToken);
+		// Add word rule for built in functions
+		WordRule caseSensitiveRule = new WordRule(new PigWordDetector(), Token.UNDEFINED, false);
 
 		for (String func : BUILTIN_FUN)
-			wordRule.addWord(func, builtinFunToken, false);
+			caseSensitiveRule.addWord(func, builtinFunToken);
+
+		rules.add(caseSensitiveRule);
+		
+		// Add word rule for keywords and data types
+		WordRule caseInsensitiveRule = new WordRule(new PigWordDetector(), defaultToken, true);
+		
+		for (String keyword : KEYWORDS)
+			caseInsensitiveRule.addWord(keyword, keywordToken);
+
 
 		for (String datatype : DATA_TYPES)
-			wordRule.addWord(datatype, dataTypeToken);
+			caseInsensitiveRule.addWord(datatype, dataTypeToken);
 
-		rules.add(wordRule);
+		rules.add(caseInsensitiveRule);
 		
 		setRules(rules.toArray(new IRule[rules.size()]));
 	}
