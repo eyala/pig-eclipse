@@ -1,5 +1,6 @@
 package org.apache.pig.contrib.eclipse;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.ui.IWorkbench;
@@ -14,6 +15,9 @@ public class PigPreferences extends FieldEditorPreferencePage implements IWorkbe
 	public final static String COLOR_DATATYPES = "color.datatypes";
 	public final static String COLOR_DEFAULT = "color.default";
 	
+	public final static String MATCH_BRACKETS = "match.brackets";
+	public final static String MATCH_BRACKETS_COLOR = "match.brackets.color";
+	
 	public PigPreferences() {
 		super(FieldEditorPreferencePage.GRID);
 		setPreferenceStore(PigActivator.getDefault().getPreferenceStore());
@@ -26,6 +30,9 @@ public class PigPreferences extends FieldEditorPreferencePage implements IWorkbe
 
 	@Override
 	protected void createFieldEditors() {
+		final ColorFieldEditor defaultEditor = new ColorFieldEditor(COLOR_DEFAULT, "Default", getFieldEditorParent());
+		addField(defaultEditor);
+
 		final ColorFieldEditor keywordsEditor = new ColorFieldEditor(COLOR_KEYWORDS, "Keywords", getFieldEditorParent());
 		addField(keywordsEditor);
 		
@@ -41,8 +48,11 @@ public class PigPreferences extends FieldEditorPreferencePage implements IWorkbe
 		final ColorFieldEditor dataTypesEditor = new ColorFieldEditor(COLOR_DATATYPES, "Data types", getFieldEditorParent());
 		addField(dataTypesEditor);
 
-		final ColorFieldEditor defaultEditor = new ColorFieldEditor(COLOR_DEFAULT, "Default", getFieldEditorParent());
-		addField(defaultEditor);
+		final ColorFieldEditor matchBracketsColorEditor = new ColorFieldEditor(MATCH_BRACKETS_COLOR, "Matching brackets color", getFieldEditorParent());
+		addField(matchBracketsColorEditor);
+
+		final BooleanFieldEditor matchBracketsEditor = new BooleanFieldEditor(MATCH_BRACKETS, "Match brackets", getFieldEditorParent());
+		addField(matchBracketsEditor);
 
 		adjustGridLayout();
 	}
