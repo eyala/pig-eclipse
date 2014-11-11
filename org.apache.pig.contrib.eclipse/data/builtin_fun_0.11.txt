@@ -30,7 +30,8 @@ HBaseStorage
 HoursBetween
 INDEXOF
 IsEmpty
-JsonLoader, JsonStorage
+JsonLoader
+JsonStorage
 LAST_INDEX_OF
 LCFIRST
 LOG

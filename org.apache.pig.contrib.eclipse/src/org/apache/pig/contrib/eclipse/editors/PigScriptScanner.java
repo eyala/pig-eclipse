@@ -38,10 +38,10 @@ public class PigScriptScanner extends RuleBasedScanner {
 	private static Set<String> BUILTIN_FUN;
 	private static Set<String> DATA_TYPES;
 
-	public static void loadResources() {
-		KEYWORDS = readFromResources("keywords.txt");
-		BUILTIN_FUN = readFromResources("builtin_fun.txt");
-		DATA_TYPES = readFromResources("data_types.txt");
+	public static void loadResources(String version) {
+		KEYWORDS = readFromResources("keywords_" + version + ".txt");
+		BUILTIN_FUN = readFromResources("builtin_fun_" + version + ".txt");
+		DATA_TYPES = readFromResources("data_types_" + version + ".txt");
 	}
 	
 	private static Set<String> readFromResources(String path) {
@@ -76,12 +76,12 @@ public class PigScriptScanner extends RuleBasedScanner {
 
 		return result;
 	}
-	
+		
 	public PigScriptScanner() {
 		
 		IPreferenceStore store = PigActivator.getDefault().getPreferenceStore();
 		
-		loadResources();
+		loadResources(store.getString(PigPreferences.PIG_VERSION));
 		
 		IToken keywordToken = new Token(new TextAttribute(getColor(PreferenceConverter.getColor(store, PigPreferences.COLOR_KEYWORDS)), null, SWT.BOLD));
 		

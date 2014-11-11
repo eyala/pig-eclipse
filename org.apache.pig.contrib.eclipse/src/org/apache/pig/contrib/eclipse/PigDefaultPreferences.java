@@ -18,5 +18,7 @@ public class PigDefaultPreferences extends AbstractPreferenceInitializer {
         
         store.setDefault(PigPreferences.MATCH_BRACKETS, true);
         store.setDefault(PigPreferences.MATCH_BRACKETS_COLOR, "127,0,0");
+        
+        store.setDefault(PigPreferences.PIG_VERSION, "0.11");
     }
 }

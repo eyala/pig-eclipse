@@ -1,0 +1,10 @@
+bytearray
+chararray
+int
+float
+long
+double
+boolean
+datetime
+bigdecimal
+biginteger
