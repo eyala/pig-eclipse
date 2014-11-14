@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/org.apache.pig.contrib.eclipse.feature_1.0.2.qualifier.jar" id="org.apache.pig.contrib.eclipse.feature" version="1.0.2.qualifier">
+   <feature url="features/org.apache.pig.contrib.eclipse.feature_1.0.3.qualifier.jar" id="org.apache.pig.contrib.eclipse.feature" version="1.0.3.qualifier">
       <category name="org.apache.pig.contrib.eclipse.category"/>
    </feature>
    <category-def name="org.apache.pig.contrib.eclipse.category" label="Pig-Eclipse">
