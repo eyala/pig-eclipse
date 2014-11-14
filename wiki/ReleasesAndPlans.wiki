@@ -3,10 +3,16 @@
 
 = Upcoming Release / TODO =
 
-  * Pig 0.12 support
   * Return of commenting functionality
+  * Syntax check
+  * Alias use highlighting
 
 = Past Releases =
+
+== 1.0.3 / November 14th, 2014 ==
+
+  * Pig 0.12 support (choose Pig version in the preferences, but you need to restart Eclipse and reopen files to see the difference)
+  * Bracket matching
 
 == 1.0.2 / October 29th, 2014 ==
 
