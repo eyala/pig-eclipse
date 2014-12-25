@@ -42,6 +42,9 @@ public class PigScriptScanner extends RuleBasedScanner {
 		KEYWORDS = readFromResources("keywords_" + version + ".txt");
 		BUILTIN_FUN = readFromResources("builtin_fun_" + version + ".txt");
 		DATA_TYPES = readFromResources("data_types_" + version + ".txt");
+		
+		PigContentAssistant.setBuiltins(BUILTIN_FUN);
+		PigContentAssistant.setKeywords(KEYWORDS);
 	}
 	
 	private static Set<String> readFromResources(String path) {

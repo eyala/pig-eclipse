@@ -1,21 +1,9 @@
 package org.apache.pig.contrib.eclipse;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;
-
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -32,6 +20,8 @@ public class PigPreferences extends FieldEditorPreferencePage implements IWorkbe
 	public final static String MATCH_BRACKETS_COLOR = "match.brackets.color";
 	
 	public final static String PIG_VERSION = "pig.version";
+	
+	public static final String AUTO_COMPLETE_UPPER_CASE = "auto.complete.upper.case";
 	
 	public PigPreferences() {
 		super(FieldEditorPreferencePage.GRID);
@@ -70,6 +60,9 @@ public class PigPreferences extends FieldEditorPreferencePage implements IWorkbe
 
 		final BooleanFieldEditor matchBracketsEditor = new BooleanFieldEditor(MATCH_BRACKETS, "Match brackets", getFieldEditorParent());
 		addField(matchBracketsEditor);
+
+		final BooleanFieldEditor autoCompleteCaseEditor = new BooleanFieldEditor(AUTO_COMPLETE_UPPER_CASE, "Auto complete reserved words in capitals", getFieldEditorParent());
+		addField(autoCompleteCaseEditor);
 
 		String[][] versions = {{"0.11", "0.11"},{"0.12", "0.12"}};
 		
