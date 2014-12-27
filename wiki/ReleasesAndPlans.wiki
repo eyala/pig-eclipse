@@ -6,8 +6,15 @@
   * Return of commenting functionality
   * Syntax check
   * Alias use highlighting
+  * Smarter auto-complete
+  * Macro / UDF information in tooltips
 
 = Past Releases =
+
+== 1.0.4 / December 27th, 2014 ==
+
+  * Pig 0.13 support (choose Pig version in the preferences, but you need to restart Eclipse and reopen files to see the difference)
+  * Basic auto-complete. Pig-Eclipse will suggest keywords and built-in functions, sorted alphabetically. You can choose whether you want upper case or lower case keywords in the preferences)
 
 == 1.0.3 / November 14th, 2014 ==
 
