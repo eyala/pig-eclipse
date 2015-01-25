@@ -69,11 +69,11 @@ public class PigTextHover implements ITextHover, ITextHoverExtension, ITextHover
 		if (!word.isEmpty()) {
 
 			PigLogger.debug("Searching for macro definition for '" + word + "'");
-			
-			// 2. Prepare a regular expression for finding a macro definition for the current word 
-			Pattern find_macro = RegexUtils.findDefinesForHoverInfoPattern(word);
 
-			// 3. Scan all of the current document (up to this point) for a local macro definition
+			// 2. Prepare a regular expression for finding macro definitions for the current word 
+			Pattern macro_defines = RegexUtils.findMacroDefinesForHoverInfoPattern(word);
+
+			// 3. Get all of the current document (up to this point)
 			String mostOfDoc = "";
 			
 			try {
@@ -82,18 +82,27 @@ public class PigTextHover implements ITextHover, ITextHoverExtension, ITextHover
 				PigLogger.warn("BadLocationException while getting document from start to " + start, ble); // this shouldn't happen
 			}
 
-			Matcher m = find_macro.matcher(mostOfDoc);
+			Matcher m = macro_defines.matcher(mostOfDoc);
 			
 			if (m.find()) {
 				return m.group(1);
 			}
 
-			// 3. Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
-			Set<String> imports = RegexUtils.findImports(mostOfDoc);
+			// 4. Prepare a regular expression for finding non macro definitions and use it 
+			Pattern local_defines = RegexUtils.findNonMacroDefinesForHoverInfoPattern(word);
+
+			Matcher m2 = local_defines.matcher(mostOfDoc);
 			
-			// 4. Scan the entire workspace for matching macro definitions
-			//return new WorkspaceSearcher().findInFiles(imports, find_macro, false);
-			return new VisitorWorkspaceSearcher().findInFiles(imports, find_macro, false);
+			if (m2.find()) {
+				return m2.group();
+			}
+
+			// 5. Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
+			Set<String> imports = RegexUtils.findImports(mostOfDoc);
+
+
+			// 6. Try to find a matching macro definition elsewhere in the workspace
+			return new VisitorWorkspaceSearcher().findInFiles(imports, macro_defines, false);
 		}
 		
 		return "";

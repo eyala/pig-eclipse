@@ -70,17 +70,21 @@ public class PigContentAssistant implements IContentAssistProcessor{
 		Set<String> imports = RegexUtils.findImports(mostOfDoc);
 		
 		// 3. Scan the entire workspace for macro definitions
-		Set<String> defines = new VisitorWorkspaceSearcher().findAllInFiles(imports, RegexUtils.FIND_DEFINES, false);
+		Set<String> dynamic_completions = new VisitorWorkspaceSearcher().findAllInFiles(imports, RegexUtils.FIND_DEFINES, false);
 
 		// 4. Add macros defined in the current file
-		Set<String> localDefines = RegexUtils.findDefines(mostOfDoc);
-		
-		defines.addAll(localDefines);
-		
+		dynamic_completions.addAll(RegexUtils.findDefines(mostOfDoc));
+
+		// 5. Add relations defined in the current file
+		dynamic_completions.addAll(RegexUtils.findRelations(mostOfDoc));
+
+		// 6. Add relations defined in SPLIT commands in the current file
+		dynamic_completions.addAll(RegexUtils.findRelationsFromSplit(mostOfDoc));
+
 		boolean addedMacros = false;
 		
-        for (String i : defines ) {
-        	if (i.startsWith(prefix)) {
+        for (String i : dynamic_completions ) {
+        	if (i.toLowerCase().startsWith(prefix)) {
         		result.add(new CompletionProposal(i, replacementOffset, replacementLength, i.length()));
         		addedMacros = true;
         	}
