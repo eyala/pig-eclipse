@@ -1,9 +1,11 @@
-package org.apache.pig.contrib.eclipse.editors;
+package org.apache.pig.contrib.eclipse.utils;
 
 import org.eclipse.jface.text.rules.IWordDetector;
 
 public class PigWordDetector implements IWordDetector {
 
+	public static PigWordDetector INSTANCE = new PigWordDetector();
+	
 	@Override
 	public boolean isWordPart(char c) {
 		if (c=='.'){

@@ -1,4 +1,4 @@
-package org.apache.pig.contrib.eclipse;
+package org.apache.pig.contrib.eclipse.utils;
 
 import java.util.ArrayList;
 import java.util.List;

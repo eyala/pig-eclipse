@@ -1,19 +1,13 @@
 package org.apache.pig.contrib.eclipse.editors;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.pig.contrib.eclipse.PigActivator;
 import org.apache.pig.contrib.eclipse.PigPreferences;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
+import org.apache.pig.contrib.eclipse.utils.PigWordDetector;
+import org.apache.pig.contrib.eclipse.utils.ResourceReader;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.TextAttribute;
@@ -39,45 +33,12 @@ public class PigScriptScanner extends RuleBasedScanner {
 	private static Set<String> DATA_TYPES;
 
 	public static void loadResources(String version) {
-		KEYWORDS = readFromResources("keywords_" + version + ".txt");
-		BUILTIN_FUN = readFromResources("builtin_fun_" + version + ".txt");
-		DATA_TYPES = readFromResources("data_types_" + version + ".txt");
+		KEYWORDS = ResourceReader.read("keywords_" + version + ".txt");
+		BUILTIN_FUN = ResourceReader.read("builtin_fun_" + version + ".txt");
+		DATA_TYPES = ResourceReader.read("data_types_" + version + ".txt");
 		
 		PigContentAssistant.setBuiltins(BUILTIN_FUN);
 		PigContentAssistant.setKeywords(KEYWORDS);
-	}
-	
-	private static Set<String> readFromResources(String path) {
-		Set<String> result= new HashSet<String>();
-		
-		BufferedReader reader = null;
-		
-		try {
-			reader = new BufferedReader(new InputStreamReader(FileLocator.openStream(Platform.getBundle("org.apache.pig.contrib.eclipse"), new Path("data" + File.separator + path ), false)));
-
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				line = line.trim();
-				if (line.length() != 0) {
-					result.add(line);
-				}
-			}
-			
-		} catch (IOException e) {
-			System.err.println("Failed to read resources: " + path);
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					System.err.println("Unable to close data files");
-					e.printStackTrace();
-				}
-			}
-		}
-
-		return result;
 	}
 		
 	public PigScriptScanner() {
@@ -112,7 +73,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 		rules.add(new WhitespaceRule(new PigWhiteSpaceDetector()));
 
 		// Add word rule for built in functions
-		WordRule caseSensitiveRule = new WordRule(new PigWordDetector(), Token.UNDEFINED, false);
+		WordRule caseSensitiveRule = new WordRule(PigWordDetector.INSTANCE, Token.UNDEFINED, false);
 
 		for (String func : BUILTIN_FUN)
 			caseSensitiveRule.addWord(func, builtinFunToken);
@@ -120,7 +81,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 		rules.add(caseSensitiveRule);
 		
 		// Add word rule for keywords and data types
-		WordRule caseInsensitiveRule = new WordRule(new PigWordDetector(), defaultToken, true);
+		WordRule caseInsensitiveRule = new WordRule(PigWordDetector.INSTANCE, defaultToken, true);
 		
 		for (String keyword : KEYWORDS)
 			caseInsensitiveRule.addWord(keyword, keywordToken);

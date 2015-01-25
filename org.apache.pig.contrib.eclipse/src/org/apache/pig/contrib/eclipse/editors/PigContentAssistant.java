@@ -1,12 +1,18 @@
 package org.apache.pig.contrib.eclipse.editors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.pig.contrib.eclipse.PigActivator;
+import org.apache.pig.contrib.eclipse.PigLogger;
 import org.apache.pig.contrib.eclipse.PigPreferences;
+import org.apache.pig.contrib.eclipse.utils.RegexUtils;
+import org.apache.pig.contrib.eclipse.utils.VisitorWorkspaceSearcher;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -18,7 +24,7 @@ import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.jface.text.contentassist.IContextInformationValidator;
 
 /**
- * Does static auto completion proposals based on Pig's keywords and builtin functions
+ * Provides completion proposals based on Pig's keywords, builtin functions, and macros that are in context
  * 
  * Keywords are returned in upper or lower case according to preferences
  * 
@@ -32,6 +38,8 @@ public class PigContentAssistant implements IContentAssistProcessor{
 	private static Collection<String> KEYWORDS = Collections.emptyList();
 	private static Collection<String> BUILTINS = Collections.emptyList();
 	
+	private static CompletionProposalComparator COMPLETION_COMPARATOR = new CompletionProposalComparator();
+	
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
 			int offset) {
@@ -43,18 +51,53 @@ public class PigContentAssistant implements IContentAssistProcessor{
         int replacementOffset = offset - prefix.length();
         int replacementLength = prefix.length();
         
+        // 1. Add constant suggestions
         for (int i = 0; i < SEARCH_ARRAY.length; i++) {
         	if (SEARCH_ARRAY[i].startsWith(prefix)) {
         		result.add(new CompletionProposal(RESULTS_ARRAY[i], replacementOffset, replacementLength, RESULTS_ARRAY[i].length()));
         	}
         }
+
+        // 2. Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
+		String mostOfDoc = "";
+		
+		try {
+			mostOfDoc = viewer.getDocument().get(0, offset);
+		} catch (BadLocationException ble) {
+			PigLogger.warn("Not adding dynamic content assist because of BadLocationException with offset " + offset, ble);
+		}
+		
+		Set<String> imports = RegexUtils.findImports(mostOfDoc);
+		
+		// 3. Scan the entire workspace for macro definitions
+		Set<String> defines = new VisitorWorkspaceSearcher().findAllInFiles(imports, RegexUtils.FIND_DEFINES, false);
+
+		// 4. Add macros defined in the current file
+		Set<String> localDefines = RegexUtils.findDefines(mostOfDoc);
+		
+		defines.addAll(localDefines);
+		
+		boolean addedMacros = false;
+		
+        for (String i : defines ) {
+        	if (i.startsWith(prefix)) {
+        		result.add(new CompletionProposal(i, replacementOffset, replacementLength, i.length()));
+        		addedMacros = true;
+        	}
+        }
+
+        ICompletionProposal[] resultArray = result.toArray(new ICompletionProposal[result.size()]);
         
-        return result.toArray(new ICompletionProposal[result.size()]);
+        // if we didn't add dynamic content, the array is already sorted
+        if (addedMacros) {
+        	Arrays.sort(resultArray, COMPLETION_COMPARATOR);
+        }
+        
+        return resultArray;
 	}
 
 	@Override
-	public IContextInformation[] computeContextInformation(ITextViewer viewer,
-			int offset) {
+	public IContextInformation[] computeContextInformation(ITextViewer viewer, int offset) {
 		return null;
 	}
 
@@ -90,7 +133,9 @@ public class PigContentAssistant implements IContentAssistProcessor{
 			if (n == -1) {
 				return doc.get(n + 1, offset - n - 1);
 			}
-		} catch (BadLocationException e) {}
+		} catch (BadLocationException ble) {
+			PigLogger.info("Ignoring BadLocationException in getPrefix with offset " + offset);
+		}
 		
 		return "";
 	}
@@ -138,5 +183,17 @@ public class PigContentAssistant implements IContentAssistProcessor{
 		
 		searchList.toArray(SEARCH_ARRAY);
 		resultsList.toArray(RESULTS_ARRAY);
+	}
+	
+	/**
+	 * For sorting completions based on what the user sees
+	 */
+	private static class CompletionProposalComparator implements Comparator<ICompletionProposal> {
+
+		@Override
+		public int compare(ICompletionProposal o1, ICompletionProposal o2) {
+			return String.CASE_INSENSITIVE_ORDER.compare(o1.getDisplayString(), o2.getDisplayString());
+		}
+		
 	}
 }
