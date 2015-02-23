@@ -1,13 +1,7 @@
 package org.apache.pig.contrib.eclipse.editors;
 
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.pig.contrib.eclipse.PigLogger;
-import org.apache.pig.contrib.eclipse.utils.RegexUtils;
-import org.apache.pig.contrib.eclipse.utils.VisitorWorkspaceSearcher;
-import org.eclipse.jface.text.BadLocationException;
+import org.apache.pig.contrib.eclipse.OpenDeclarationHandler;
+import org.apache.pig.contrib.eclipse.utils.SearchResult;
 import org.eclipse.jface.text.DefaultInformationControl;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControl;
@@ -42,70 +36,15 @@ public class PigTextHover implements ITextHover, ITextHoverExtension, ITextHover
 	public Object getHoverInfo2(ITextViewer textViewer, IRegion hoverRegion) {
 		IDocument doc = textViewer.getDocument();
 		
-		int start = hoverRegion.getOffset();
-		int end = start;
-
-		// 1. Find the word we're on
-		try {
-			while (start >= 0 && Character.isJavaIdentifierPart(doc.getChar(start))) {
-				start--;
-			}
-		} catch (BadLocationException e) {}
+		int offset = hoverRegion.getOffset();
 		
-		try {
-			while (Character.isJavaIdentifierPart(doc.getChar(end))) {
-				end++;
-			}
-		} catch (BadLocationException e) {}
+		SearchResult result = OpenDeclarationHandler.findDeclaration(doc, offset);
 			
-		String word = "";
-		
-		try {
-			word = doc.get(start+1, end-start-1);
-		} catch (BadLocationException ble) {
-			PigLogger.warn("BadLocationException while getting word from region with start " + start + " and end " + end, ble); // this shouldn't happen
+		if (result != null && result.text != null) {
+			return result.text;
+		} else {
+			return "";
 		}
-		
-		if (!word.isEmpty()) {
-
-			PigLogger.debug("Searching for macro definition for '" + word + "'");
-
-			// 2. Prepare a regular expression for finding macro definitions for the current word 
-			Pattern macro_defines = RegexUtils.findMacroDefinesForHoverInfoPattern(word);
-
-			// 3. Get all of the current document (up to this point)
-			String mostOfDoc = "";
-			
-			try {
-				mostOfDoc = doc.get(0, start);
-			} catch (BadLocationException ble) {
-				PigLogger.warn("BadLocationException while getting document from start to " + start, ble); // this shouldn't happen
-			}
-
-			Matcher m = macro_defines.matcher(mostOfDoc);
-			
-			if (m.find()) {
-				return m.group(1);
-			}
-
-			// 4. Prepare a regular expression for finding non macro definitions and use it 
-			Pattern local_defines = RegexUtils.findNonMacroDefinesForHoverInfoPattern(word);
-
-			Matcher m2 = local_defines.matcher(mostOfDoc);
-			
-			if (m2.find()) {
-				return m2.group();
-			}
-
-			// 5. Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
-			Set<String> imports = RegexUtils.findImports(mostOfDoc);
-
-
-			// 6. Try to find a matching macro definition elsewhere in the workspace
-			return new VisitorWorkspaceSearcher().findInFiles(imports, macro_defines, false);
-		}
-		
-		return "";
 	}
 	
 	/**

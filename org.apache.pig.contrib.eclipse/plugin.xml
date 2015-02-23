@@ -35,4 +35,22 @@
             name="Pig">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.apache.pig.contrib.eclipse.OpenDeclarationHandler"
+            commandId="org.eclipse.jdt.ui.edit.text.java.open.editor">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:navigate?before=additions">
+         <command
+               commandId="org.eclipse.jdt.ui.edit.text.java.open.editor"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
 </plugin>

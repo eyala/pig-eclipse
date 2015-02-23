@@ -21,7 +21,7 @@ public class MacroFinder implements IResourceProxyVisitor {
 
 	private final Set<String> imports;
 	private final Pattern find_macro;
-	private final Set<String> result = new HashSet<String>();
+	private final Set<SearchResult> result = new HashSet<SearchResult>();
 	
 	private int folders = 0;
 	private int files = 0;
@@ -86,23 +86,14 @@ public class MacroFinder implements IResourceProxyVisitor {
 				
 				while ((reader.ready())) {
 					line = reader.readLine();
-					file.append(line);
+					file.append(line).append("\n");
 				}
-					/*
-					Matcher m = FIND_IMPORTS.matcher(line);
-					
-					if (m.matches()) {
-						String tooltip = m.group(1);
-						PigLogger.debug("Found more imports for " + tooltip + " within " + member.getName());
-						//return tooltip;
-					}
-					*/
 
 				Matcher m2 = find_macro.matcher(file);
 				while (m2.find()) {
 					String match = m2.group(1);
 					PigLogger.debug("Found macro definition for '" + match + "' within " + member.getName());
-					result.add(match);
+					result.add(new SearchResult(m2.start(1), member, match));
 					
 					if (justOneResult) {
 						return true;
@@ -124,7 +115,7 @@ public class MacroFinder implements IResourceProxyVisitor {
 		return false;
 	}
 
-	public Set<String> getResult() {
+	public Set<SearchResult> getResult() {
 		return result;
 	}
 
@@ -135,5 +126,4 @@ public class MacroFinder implements IResourceProxyVisitor {
 	public int getFilesSearched() {
 		return files ;
 	}
-
 }

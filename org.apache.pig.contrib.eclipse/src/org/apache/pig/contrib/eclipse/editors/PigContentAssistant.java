@@ -12,7 +12,7 @@ import org.apache.pig.contrib.eclipse.PigActivator;
 import org.apache.pig.contrib.eclipse.PigLogger;
 import org.apache.pig.contrib.eclipse.PigPreferences;
 import org.apache.pig.contrib.eclipse.utils.RegexUtils;
-import org.apache.pig.contrib.eclipse.utils.VisitorWorkspaceSearcher;
+import org.apache.pig.contrib.eclipse.utils.WorkspaceSearcher;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
@@ -70,7 +70,7 @@ public class PigContentAssistant implements IContentAssistProcessor{
 		Set<String> imports = RegexUtils.findImports(mostOfDoc);
 		
 		// 3. Scan the entire workspace for macro definitions
-		Set<String> dynamic_completions = new VisitorWorkspaceSearcher().findAllInFiles(imports, RegexUtils.FIND_DEFINES, false);
+		Set<String> dynamic_completions = new WorkspaceSearcher().findAll(imports, RegexUtils.FIND_DEFINES, false);
 
 		// 4. Add macros defined in the current file
 		dynamic_completions.addAll(RegexUtils.findDefines(mostOfDoc));
@@ -84,7 +84,7 @@ public class PigContentAssistant implements IContentAssistProcessor{
 		boolean addedMacros = false;
 		
         for (String i : dynamic_completions ) {
-        	if (i.toLowerCase().startsWith(prefix)) {
+        	if (i != null && i.toLowerCase().startsWith(prefix)) {
         		result.add(new CompletionProposal(i, replacementOffset, replacementLength, i.length()));
         		addedMacros = true;
         	}
@@ -130,7 +130,7 @@ public class PigContentAssistant implements IContentAssistProcessor{
 			int n = 0;
 			for (n = offset - 1; n >= 0; n--) {
 				char c = doc.getChar(n);
-				if (!Character.isLetter(c)) {
+				if (!Character.isLetter(c) && !Character.isDigit(c) && c != '_') {
 					return doc.get(n + 1, offset - n - 1);
 				}
 			}
