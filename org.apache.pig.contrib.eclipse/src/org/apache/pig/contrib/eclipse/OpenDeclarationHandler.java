@@ -15,12 +15,14 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditor;
 
@@ -120,7 +122,19 @@ public class OpenDeclarationHandler extends AbstractHandler {
 		ITextEditor editor;
 		try {
 			if (file != null) {
-				editor = (ITextEditor) IDE.openEditor(page, file); // otherwise open a new one
+				FileEditorInput input = new FileEditorInput(file);
+				
+				IEditorDescriptor editorDesc = IDE.getEditorDescriptor(file);
+				
+				IEditorPart foundEditor = page.findEditor(input);
+				
+				if (foundEditor != null) {
+					editor = (ITextEditor)foundEditor; // if the editor is already open
+					page.activate(editor);
+				} else {
+					editor = (ITextEditor)page.openEditor(input, editorDesc.getId()); // otherwise open a new editor
+				}
+
 			} else {
 				editor = (ITextEditor) page.getActiveEditor(); // this means the declaration was found locally
 			}
