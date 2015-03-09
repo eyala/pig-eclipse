@@ -54,7 +54,7 @@ public class MacroFinder implements IResourceProxyVisitor {
 		if (type != IResource.FILE) {
 			folders++;
 			return ! proxy.isDerived() && proxy.isAccessible();
-		} else if (proxy.isAccessible() && imports.contains(proxy.getName())) {
+		} else if (proxy.isAccessible() && imports.contains(proxy.getName()) && ! proxy.isDerived() && ! proxy.isPhantom()) {
 			files++;
 			
 			IFile member = (IFile) proxy.requestResource();
@@ -93,7 +93,7 @@ public class MacroFinder implements IResourceProxyVisitor {
 				while (m2.find()) {
 					String match = m2.group(1);
 					PigLogger.debug("Found macro definition for '" + match + "' within " + member.getName());
-					result.add(new SearchResult(m2.start(1), member, match));
+					result.add(new SourceSearchResult(m2.start(1), member, match));
 					
 					if (justOneResult) {
 						return true;

@@ -40,8 +40,8 @@ public class PigTextHover implements ITextHover, ITextHoverExtension, ITextHover
 		
 		SearchResult result = OpenDeclarationHandler.findDeclaration(doc, offset);
 			
-		if (result != null && result.text != null) {
-			return result.text;
+		if (result != null && result.getText() != null) {
+			return result.getText();
 		} else {
 			return "";
 		}

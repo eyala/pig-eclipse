@@ -103,7 +103,7 @@ public class RegexUtils {
 
 	// This is the pattern for finding local DEFINES
 	public static Pattern findNonMacroDefinesForHoverInfoPattern(String name) {
-		return Pattern.compile(DEFINE_PREFIX + "(?-i)" + name + "\\s*.+?;");
+		return Pattern.compile(DEFINE_PREFIX + "(?-i)" + name + "\\s*(.+?);");
 	}
 
 	private static Set<String> findThings(String text, Pattern pattern, int groupNum) {

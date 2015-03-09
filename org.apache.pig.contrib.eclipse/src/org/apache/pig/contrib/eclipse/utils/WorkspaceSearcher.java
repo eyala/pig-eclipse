@@ -42,10 +42,39 @@ public class WorkspaceSearcher {
 		Set<String> result = new HashSet<String>();
 		
 		for (SearchResult i : innerFindInFiles) {
-			result.add(i.text);
+			result.add(i.getText());
 		}
 		
 		return result;
+	}
+
+	/**
+	 * Find a java file that matches a given fully qualified class name
+	 * 
+	 * @param udf the fully qualified name of the udf
+	 * @param originalDef a string to be used in case the javadoc can't be found
+	 */
+	public SearchResult findUdf(String udf, String originalDef) {
+		long start = System.currentTimeMillis();
+		
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+
+		UdfFinder visitor = new UdfFinder(udf, originalDef);
+		
+		try {
+			root.accept(visitor, 0);
+		} catch (CoreException e) {
+			PigLogger.warn("Caught exception from visitor", e);
+		}
+		
+		long end = System.currentTimeMillis();
+
+		numOfSearches++;
+		totalTimeOfSearches += (end-start);
+
+		PigLogger.debug("Searching workspace took " + (end-start) + " ms (" + (totalTimeOfSearches / numOfSearches) + " avg time)");
+		
+		return visitor.getResult();
 	}
 
 	private Set<SearchResult> innerFind(Set<String> files, Pattern find_macro, boolean justOneResult, boolean recursive) {
@@ -71,9 +100,8 @@ public class WorkspaceSearcher {
 		numOfSearches++;
 		totalTimeOfSearches += (end-start);
 
-		PigLogger.debug("Searching workspace took " + (end-start) + " ms (" + (totalTimeOfSearches / numOfSearches) + " avg time) after searching " + visitor.getFoldersSearched() + " folders and " + visitor.getFilesSearched() + " files\n");
+		PigLogger.debug("Searching workspace took " + (end-start) + " ms (" + (totalTimeOfSearches / numOfSearches) + " avg time) after searching " + visitor.getFoldersSearched() + " folders and " + visitor.getFilesSearched() + " files");
 		
 		return visitor.getResult();
-			
 	}
 }
