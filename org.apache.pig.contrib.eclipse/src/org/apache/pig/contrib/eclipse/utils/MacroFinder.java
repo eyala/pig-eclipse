@@ -96,7 +96,7 @@ public class MacroFinder implements IResourceProxyVisitor {
 					result.add(new SourceSearchResult(m2.start(1), member, match));
 					
 					if (justOneResult) {
-						return true;
+						return false;
 					}
 				}
 			} catch (MalformedURLException e) {

@@ -1,5 +1,7 @@
 package org.apache.pig.contrib.eclipse;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,6 +23,9 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 
 public class OpenDeclarationHandler extends AbstractHandler {
 
+	// Used for searching for builtin functions
+	private static Set<String> BUILTINS;
+	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
@@ -63,17 +68,27 @@ public class OpenDeclarationHandler extends AbstractHandler {
 	 */
 	public static SearchResult findDeclaration(IDocument doc, int offset) {
 
-		// 1. Get the word we're on
+		// Get the word we're on
 		String word = PigWordDetector.INSTANCE.getWord(doc, offset);
 		
 		if (word != null && ! word.trim().isEmpty()) {
 
 			PigLogger.debug("Searching for definition for '" + word + "'");
 
-			// 2. Prepare a regular expression for finding macro definitions for the current word 
+			// If there are periods in it, consider it a UDF
+			if (word.indexOf(".") != -1) {
+				return new WorkspaceSearcher().findUdf(word, null);
+			}
+			
+			// If it is a builtin function, add its package name and search for it
+			if (BUILTINS.contains(word)) {
+				return new WorkspaceSearcher().findUdf("org.apache.pig.builtin." + word, null);
+			}
+			
+			// Prepare a regular expression for finding macro definitions for the current word 
 			Pattern macro_defines = RegexUtils.findMacroDefinesForHoverInfoPattern(word);
 
-			// 3. Get all of the current document (up to this point)
+			// Get all of the current document (up to this point)
 			String mostOfDoc = "";
 
 			try {
@@ -90,7 +105,7 @@ public class OpenDeclarationHandler extends AbstractHandler {
 				return new SourceSearchResult(m.start(), null, m.group(1) );
 			}
 
-			// 4. Prepare a regular expression for finding non macro definitions and use it 
+			// Prepare a regular expression for finding non macro definitions and use it 
 			Pattern local_defines = RegexUtils.findNonMacroDefinesForHoverInfoPattern(word);
 
 			Matcher m2 = local_defines.matcher(mostOfDoc);
@@ -117,15 +132,23 @@ public class OpenDeclarationHandler extends AbstractHandler {
 				return new SourceSearchResult(m2.start(), null, defineTarget ); // fallback to using the local define
 			}
 
-			// 5. Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
+			// Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
 			Set<String> imports = RegexUtils.findImports(mostOfDoc);
 
-			// 6. Try to find a matching macro definition elsewhere in the workspace
+			// Try to find a matching macro definition elsewhere in the workspace
 			return new WorkspaceSearcher().find(imports, macro_defines, false);
 		} else {
 			PigLogger.debug("Pig OpenDeclaration triggered, but not word found at offset " + offset);
 		}
 		
 		return null;
+	}
+	
+	public static void setBuiltins(Collection<String> builtins) {
+		BUILTINS = new HashSet<String>();
+		
+		for (String b : builtins) {
+			BUILTINS.add(b);
+		}
 	}
 }

@@ -30,9 +30,8 @@ public class PigWordDetector implements IWordDetector {
 		int start = offset;
 		int end = start;
 		
-		// 1. Find the word we're on
 		try {
-			while (start >= 0 && Character.isJavaIdentifierPart(doc.getChar(start))) {
+			while (start >= 0 && isWordPart(doc.getChar(start))) {
 				start--;
 			}
 			

@@ -25,16 +25,17 @@ public class UdfFinder implements IResourceProxyVisitor {
 	@Override
 	public boolean visit(IResourceProxy proxy) throws CoreException {
 		
-		if (proxy.getType() == IResource.ROOT) {
+		// stop searching after the first result
+		if (result != null) {
+			return false;
+		} else if (proxy.getType() == IResource.ROOT) {
 			return true;
 		} else if (proxy.getType() == IResource.PROJECT && proxy.isAccessible()) {
 			IProject p = (IProject) proxy.requestResource();
 
-			PigLogger.debug("Searching project " + proxy.getName() + " for udf class " + udfName);
-			
 			if (p.hasNature(JavaCore.NATURE_ID)) {
 				
-				PigLogger.debug("Searching java project " + proxy.getName() + " for udf class");
+				PigLogger.debug("Searching java project " + proxy.getName() + " for udf class " + udfName);
 
 				IJavaProject jp = JavaCore.create(p);
 

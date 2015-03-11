@@ -37,14 +37,16 @@ public class PigTextHover implements ITextHover, ITextHoverExtension, ITextHover
 		IDocument doc = textViewer.getDocument();
 		
 		int offset = hoverRegion.getOffset();
-		
+
+		String hoverInfo = null;
+
 		SearchResult result = OpenDeclarationHandler.findDeclaration(doc, offset);
-			
-		if (result != null && result.getText() != null) {
-			return result.getText();
-		} else {
-			return "";
+		
+		if (result != null) {
+			hoverInfo = result.getText();
 		}
+		
+		return hoverInfo;
 	}
 	
 	/**

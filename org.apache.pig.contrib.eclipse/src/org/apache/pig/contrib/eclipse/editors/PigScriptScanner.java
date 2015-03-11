@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.pig.contrib.eclipse.OpenDeclarationHandler;
 import org.apache.pig.contrib.eclipse.PigActivator;
 import org.apache.pig.contrib.eclipse.PigPreferences;
 import org.apache.pig.contrib.eclipse.utils.PigWordDetector;
@@ -32,6 +33,9 @@ public class PigScriptScanner extends RuleBasedScanner {
 	private static Set<String> BUILTIN_FUN;
 	private static Set<String> DATA_TYPES;
 
+	/**
+	 * This function loads the correct resources for all the classes that need them
+	 */
 	public static void loadResources(String version) {
 		KEYWORDS = ResourceReader.read("keywords_" + version + ".txt");
 		BUILTIN_FUN = ResourceReader.read("builtin_fun_" + version + ".txt");
@@ -39,6 +43,8 @@ public class PigScriptScanner extends RuleBasedScanner {
 		
 		PigContentAssistant.setBuiltins(BUILTIN_FUN);
 		PigContentAssistant.setKeywords(KEYWORDS);
+		
+		OpenDeclarationHandler.setBuiltins(BUILTIN_FUN);
 	}
 		
 	public PigScriptScanner() {
