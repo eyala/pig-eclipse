@@ -1,8 +1,7 @@
 package org.apache.pig.contrib.eclipse.editors;
 
-import org.apache.pig.contrib.eclipse.PigActivator;
 import org.apache.pig.contrib.eclipse.PigLogger;
-import org.apache.pig.contrib.eclipse.PigPreferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.source.DefaultCharacterPairMatcher;
 import org.eclipse.jface.text.source.ICharacterPairMatcher;
 import org.eclipse.jface.text.source.ISourceViewer;
@@ -12,8 +11,11 @@ import org.eclipse.ui.texteditor.SourceViewerDecorationSupport;
 
 public class PigEditor extends TextEditor {
 
+	private final static String MATCH_BRACKETS = "match.brackets";
+	private final static String MATCH_BRACKETS_COLOR = "match.brackets.color";
+
 	public PigEditor() {
-		setPreferenceStore(PigActivator.getDefault().getPreferenceStore());
+		super();
 	}
 
 	@Override
@@ -21,7 +23,10 @@ public class PigEditor extends TextEditor {
 		super.initializeEditor();
 		setSourceViewerConfiguration(new PigViewerConfiguration());
 	}
-
+	
+	/**
+	 * This adds bracket matching
+	 */
 	@Override
 	protected void configureSourceViewerDecorationSupport(SourceViewerDecorationSupport support) {
 		super.configureSourceViewerDecorationSupport(support);      
@@ -29,8 +34,13 @@ public class PigEditor extends TextEditor {
 		char[] matchChars = {'(', ')', '[', ']', '{', '}'}; 
 	    ICharacterPairMatcher matcher = new DefaultCharacterPairMatcher(matchChars);
 	    support.setCharacterPairMatcher(matcher);
-	    
-	    support.setMatchingCharacterPainterPreferenceKeys(PigPreferences.MATCH_BRACKETS, PigPreferences.MATCH_BRACKETS_COLOR);
+
+		IPreferenceStore store = getPreferenceStore();
+
+        store.setDefault(MATCH_BRACKETS, true);
+        store.setDefault(MATCH_BRACKETS_COLOR, "127,0,0");
+
+	    support.setMatchingCharacterPainterPreferenceKeys(MATCH_BRACKETS, MATCH_BRACKETS_COLOR);
 	}
 	
 	/**

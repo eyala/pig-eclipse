@@ -16,9 +16,6 @@ public class PigPreferences extends FieldEditorPreferencePage implements IWorkbe
 	public final static String COLOR_DATATYPES = "color.datatypes";
 	public final static String COLOR_DEFAULT = "color.default";
 	
-	public final static String MATCH_BRACKETS = "match.brackets";
-	public final static String MATCH_BRACKETS_COLOR = "match.brackets.color";
-	
 	public final static String PIG_VERSION = "pig.version";
 	
 	public static final String AUTO_COMPLETE_UPPER_CASE = "auto.complete.upper.case";
@@ -55,12 +52,6 @@ public class PigPreferences extends FieldEditorPreferencePage implements IWorkbe
 		final ColorFieldEditor dataTypesEditor = new ColorFieldEditor(COLOR_DATATYPES, "Data types", getFieldEditorParent());
 		addField(dataTypesEditor);
 		
-		final ColorFieldEditor matchBracketsColorEditor = new ColorFieldEditor(MATCH_BRACKETS_COLOR, "Matching brackets color", getFieldEditorParent());
-		addField(matchBracketsColorEditor);
-
-		final BooleanFieldEditor matchBracketsEditor = new BooleanFieldEditor(MATCH_BRACKETS, "Match brackets", getFieldEditorParent());
-		addField(matchBracketsEditor);
-
 		final BooleanFieldEditor autoCompleteCaseEditor = new BooleanFieldEditor(AUTO_COMPLETE_UPPER_CASE, "Auto complete reserved words in capitals", getFieldEditorParent());
 		addField(autoCompleteCaseEditor);
 

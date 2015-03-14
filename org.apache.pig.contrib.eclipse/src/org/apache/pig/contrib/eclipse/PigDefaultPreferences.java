@@ -16,9 +16,6 @@ public class PigDefaultPreferences extends AbstractPreferenceInitializer {
         PreferenceConverter.setDefault(store, PigPreferences.COLOR_DATATYPES, new RGB(217, 45, 33));
         PreferenceConverter.setDefault(store, PigPreferences.COLOR_DEFAULT, new RGB(0, 0, 0));
         
-        store.setDefault(PigPreferences.MATCH_BRACKETS, true);
-        store.setDefault(PigPreferences.MATCH_BRACKETS_COLOR, "127,0,0");
-        
         store.setDefault(PigPreferences.PIG_VERSION, "0.13");
         
         store.setDefault(PigPreferences.AUTO_COMPLETE_UPPER_CASE, true);
