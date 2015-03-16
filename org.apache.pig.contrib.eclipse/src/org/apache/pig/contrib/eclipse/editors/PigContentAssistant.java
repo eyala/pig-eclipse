@@ -70,7 +70,7 @@ public class PigContentAssistant implements IContentAssistProcessor{
 		Set<String> imports = RegexUtils.findImports(mostOfDoc);
 		
 		// 3. Scan the entire workspace for macro definitions
-		Set<String> dynamic_completions = new WorkspaceSearcher().findAll(imports, RegexUtils.FIND_DEFINES, false);
+		Set<String> dynamic_completions = new WorkspaceSearcher().findAll(imports, RegexUtils.FIND_DEFINES);
 
 		// 4. Add macros defined in the current file
 		dynamic_completions.addAll(RegexUtils.findDefines(mostOfDoc));

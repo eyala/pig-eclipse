@@ -25,8 +25,6 @@ public class MacroFinder implements IResourceProxyVisitor {
 	
 	private int folders = 0;
 	private int files = 0;
-	
-	private boolean justOneResult;
 
 	/**
 	 * Add check if projects are referenced
@@ -35,19 +33,13 @@ public class MacroFinder implements IResourceProxyVisitor {
 	 * @param find_macro
 	 * @param result
 	 */
-	public MacroFinder(Set<String> imports, Pattern find_macro, boolean justOneResult) {
+	public MacroFinder(Set<String> imports, Pattern find_macro) {
 		this.imports = imports;
 		this.find_macro = find_macro;
-		this.justOneResult = justOneResult;
 	}
 	
 	@Override
 	public boolean visit(IResourceProxy proxy) throws CoreException {
-		
-		// quickly stop searching if you're only looking for one result and you already have it
-		if (justOneResult && ! result.isEmpty()) {
-			return false;
-		}
 		
 		int type = proxy.getType();
 		
@@ -59,7 +51,7 @@ public class MacroFinder implements IResourceProxyVisitor {
 			
 			IFile member = (IFile) proxy.requestResource();
 			
-			PigLogger.debug("Reading file " + member.getFullPath());
+			//PigLogger.debug("Reading file " + member.getFullPath());
 			
 			BufferedReader reader = null;
 			InputStream contents = null;
@@ -94,10 +86,6 @@ public class MacroFinder implements IResourceProxyVisitor {
 					String match = m2.group(1);
 					PigLogger.debug("Found macro definition for '" + match + "' within " + member.getName());
 					result.add(new SourceSearchResult(m2.start(1), member, match));
-					
-					if (justOneResult) {
-						return false;
-					}
 				}
 			} catch (MalformedURLException e) {
 				PigLogger.warn("Encountered exception while processing file", e);

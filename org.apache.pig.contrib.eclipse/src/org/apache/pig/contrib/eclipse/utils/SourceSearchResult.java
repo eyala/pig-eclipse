@@ -18,6 +18,13 @@ public class SourceSearchResult extends SearchResult {
 		this(start, text.length(), file, text);
 	}
 
+	/**
+	 * Used by @WorkspaceSearcher to prefer results from src folders over others
+	 */
+	String getPath() {
+		return file.getProjectRelativePath().toString();
+	}
+	
 	@Override
 	public boolean go() {
 		return go(file);

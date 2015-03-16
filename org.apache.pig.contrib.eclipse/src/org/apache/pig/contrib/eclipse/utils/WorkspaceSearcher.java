@@ -1,6 +1,7 @@
 package org.apache.pig.contrib.eclipse.utils;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -21,12 +22,28 @@ public class WorkspaceSearcher {
 	 * 
 	 * @param files a list of files to be searched for
 	 * @param find_macro the regex of what we're looking for
-	 * @param recursive whether the search should be recursive - currently ignored
 	 */
-	public SearchResult find(Set<String> files, Pattern find_macro, boolean recursive) {
-		Set<SearchResult> result = innerFind(files, find_macro, false, recursive);
-				
-		return result.isEmpty() ? null : result.iterator().next();
+	public SearchResult find(Set<String> files, Pattern find_macro) {
+		Set<SearchResult> result = innerFind(files, find_macro);
+		
+		if (result.isEmpty()) {
+			return null;
+		}
+		
+		Iterator<SearchResult> iterator = result.iterator();
+		
+		SearchResult best = iterator.next();
+		
+		while (iterator.hasNext()) {
+			SourceSearchResult candidate = (SourceSearchResult)iterator.next();
+			
+			// this is a heuristic to prefer files from a src folder over others. I wish I had an API for this.
+			if(candidate.getPath().contains("src/")) {
+				best = candidate;
+			}
+		}
+		
+		return best;
 	}
 
 	/**
@@ -36,8 +53,8 @@ public class WorkspaceSearcher {
 	 * @param find_macro the regex of what we're looking for
 	 * @param recursive whether the search should be recursive - currently ignored
 	 */
-	public Set<String> findAll(Set<String> files, Pattern find_macro, boolean recursive) {
-		Set<SearchResult> innerFindInFiles = innerFind(files, find_macro, false, recursive);
+	public Set<String> findAll(Set<String> files, Pattern find_macro) {
+		Set<SearchResult> innerFindInFiles = innerFind(files, find_macro);
 		
 		Set<String> result = new HashSet<String>();
 		
@@ -77,7 +94,7 @@ public class WorkspaceSearcher {
 		return visitor.getResult();
 	}
 
-	private Set<SearchResult> innerFind(Set<String> files, Pattern find_macro, boolean justOneResult, boolean recursive) {
+	private Set<SearchResult> innerFind(Set<String> files, Pattern find_macro) {
 
 		if (files.isEmpty()) {
 			return EMPTY_SET;
@@ -87,7 +104,7 @@ public class WorkspaceSearcher {
 		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
-		MacroFinder visitor = new MacroFinder(files, find_macro, justOneResult);
+		MacroFinder visitor = new MacroFinder(files, find_macro);
 		
 		try {
 			root.accept(visitor, 0);

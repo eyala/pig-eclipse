@@ -7,9 +7,9 @@ Does syntax highlighting and simple auto complete, currently supports Pig 0.11 -
 
 ## Installation
 
-Install it from this update site, currently hosted on the old pig-eclipse svn at Google Code:
+Install it from this update site:
 
-https://pig-eclipse.googlecode.com/svn/trunk/update_site
+https://github.com/eyala/pig-eclipse-update-site/raw/master
 
 Pig-Eclipse requires an Eclipse with at least Java 6. It has been tested on Indigo, Juno, Kepler and Luna.
 

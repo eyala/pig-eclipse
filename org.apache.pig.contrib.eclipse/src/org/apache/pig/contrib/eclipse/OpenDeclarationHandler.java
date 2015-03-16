@@ -136,7 +136,7 @@ public class OpenDeclarationHandler extends AbstractHandler {
 			Set<String> imports = RegexUtils.findImports(mostOfDoc);
 
 			// Try to find a matching macro definition elsewhere in the workspace
-			return new WorkspaceSearcher().find(imports, macro_defines, false);
+			return new WorkspaceSearcher().find(imports, macro_defines);
 		} else {
 			PigLogger.debug("Pig OpenDeclaration triggered, but not word found at offset " + offset);
 		}
