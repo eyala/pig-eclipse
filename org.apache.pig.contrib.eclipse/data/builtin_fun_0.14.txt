@@ -48,6 +48,7 @@ MilliSecondsBetween
 MIN
 MinutesBetween
 MonthsBetween
+OrcStorage
 PigDump
 PigStorage
 PluckTuple
@@ -62,9 +63,11 @@ SecondsBetween
 SIN
 SINH
 SIZE
+SPRINTF
 SQRT
 STARTSWITH
 STRSPLIT
+STRSPLITTOBAG
 SUBSTRING
 SUBTRACT
 SubtractDuration
@@ -84,6 +87,7 @@ ToUnixTime
 TrevniStorage
 TRIM
 UCFIRST
+UniqueID
 UPPER
 WeeksBetween
 YearsBetween

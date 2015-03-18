@@ -37,9 +37,9 @@ public class PigScriptScanner extends RuleBasedScanner {
 	 * This function loads the correct resources for all the classes that need them
 	 */
 	public static void loadResources(String version) {
-		KEYWORDS = ResourceReader.read("keywords_" + version + ".txt");
-		BUILTIN_FUN = ResourceReader.read("builtin_fun_" + version + ".txt");
-		DATA_TYPES = ResourceReader.read("data_types_" + version + ".txt");
+		KEYWORDS = ResourceReader.readKeywords(version);
+		BUILTIN_FUN = ResourceReader.readBuiltIns(version);
+		DATA_TYPES = ResourceReader.readDataTypes(version);
 		
 		PigContentAssistant.setBuiltins(BUILTIN_FUN);
 		PigContentAssistant.setKeywords(KEYWORDS);

@@ -2,9 +2,11 @@ and
 all
 as
 asc
+assert
 bag
 by
 cache
+case
 cat
 cd
 cogroup
@@ -14,6 +16,7 @@ cp
 cross
 distinct
 define
+dense
 desc
 describe
 du
@@ -53,6 +56,8 @@ parallel
 pig
 pwd
 register
+returns
+rollup
 rm
 rmf
 run
@@ -69,3 +74,4 @@ true
 tuple
 union
 using
+void
