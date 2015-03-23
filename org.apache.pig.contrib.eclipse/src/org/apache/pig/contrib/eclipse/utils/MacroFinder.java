@@ -51,9 +51,6 @@ public class MacroFinder implements IResourceProxyVisitor {
 			
 			IFile member = (IFile) proxy.requestResource();
 			
-			//PigLogger.debug("Reading file " + member.getFullPath());
-			
-			BufferedReader reader = null;
 			InputStream contents = null;
 			
 			try {
@@ -69,18 +66,19 @@ public class MacroFinder implements IResourceProxyVisitor {
 					return false;
 				}
 			}
-			
+
+			BufferedReader reader = null;
+
 			try {
 				reader = new BufferedReader(new InputStreamReader(contents));
 				
 				StringBuilder file = new StringBuilder();
-				String line;
-				
-				while ((reader.ready())) {
-					line = reader.readLine();
-					file.append(line).append("\n");
-				}
 
+				// read a char at a time. Not slower than readLine, and no problems with end-of-lines
+				for (int c = reader.read(); c != -1; c = reader.read()) {
+					file.append((char)c);
+				}
+		        
 				Matcher m2 = find_macro.matcher(file);
 				while (m2.find()) {
 					String match = m2.group(1);
