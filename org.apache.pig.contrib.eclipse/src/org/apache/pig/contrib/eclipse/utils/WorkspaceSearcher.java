@@ -72,8 +72,6 @@ public class WorkspaceSearcher {
 	 * @param originalDef a string to be used in case the javadoc can't be found
 	 */
 	public SearchResult findUdf(String udf, String originalDef) {
-		long start = System.currentTimeMillis();
-		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
 		UdfFinder visitor = new UdfFinder(udf, originalDef);
@@ -84,24 +82,14 @@ public class WorkspaceSearcher {
 			PigLogger.warn("Caught exception from visitor", e);
 		}
 		
-		long end = System.currentTimeMillis();
-
-		numOfSearches++;
-		totalTimeOfSearches += (end-start);
-
-		PigLogger.debug("Searching workspace took " + (end-start) + " ms (" + (totalTimeOfSearches / numOfSearches) + " avg time)");
-		
 		return visitor.getResult();
 	}
 
 	private Set<SearchResult> innerFind(Set<String> files, Pattern find_macro) {
-
 		if (files.isEmpty()) {
 			return EMPTY_SET;
 		}
 
-		long start = System.currentTimeMillis();
-		
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
 		MacroFinder visitor = new MacroFinder(files, find_macro);
@@ -111,13 +99,6 @@ public class WorkspaceSearcher {
 		} catch (CoreException e) {
 			PigLogger.warn("Caught exception from visitor", e);
 		}
-		
-		long end = System.currentTimeMillis();
-
-		numOfSearches++;
-		totalTimeOfSearches += (end-start);
-
-		PigLogger.debug("Searching workspace took " + (end-start) + " ms (" + (totalTimeOfSearches / numOfSearches) + " avg time) after searching " + visitor.getFoldersSearched() + " folders and " + visitor.getFilesSearched() + " files");
 		
 		return visitor.getResult();
 	}

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ import org.eclipse.jface.text.contentassist.IContextInformationValidator;
  * Keywords are returned in upper or lower case according to preferences
  * 
  * Builtins are searched for ignoring case, but returned in the correct case
+ * 
+ * A static cache in this class saves workspace search results to save time
  */
 public class PigContentAssistant implements IContentAssistProcessor{
 
@@ -39,6 +42,14 @@ public class PigContentAssistant implements IContentAssistProcessor{
 	private static Collection<String> BUILTINS = Collections.emptyList();
 	
 	private static CompletionProposalComparator COMPLETION_COMPARATOR = new CompletionProposalComparator();
+	
+	// these static members are for the cache
+	private static Set<String> IMPORTS_USED_IN_CACHE = null;
+	private static Set<String> CACHED_EXTERNAL_DEFINES = null;
+	private static long LAST_CALL_TIME = 0;
+
+	// How long cache results are valid. It's not likely someone will change a macro in a different file and call auto-complete within a minute
+	private static final long AUTO_COMPLETE_CACHE_TIME = 60000;
 	
 	@Override
 	public ICompletionProposal[] computeCompletionProposals(ITextViewer viewer,
@@ -51,14 +62,14 @@ public class PigContentAssistant implements IContentAssistProcessor{
         int replacementOffset = offset - prefix.length();
         int replacementLength = prefix.length();
         
-        // 1. Add constant suggestions
+        // Add constant suggestions
         for (int i = 0; i < SEARCH_ARRAY.length; i++) {
         	if (SEARCH_ARRAY[i].startsWith(prefix)) {
         		result.add(new CompletionProposal(RESULTS_ARRAY[i], replacementOffset, replacementLength, RESULTS_ARRAY[i].length()));
         	}
         }
 
-        // 2. Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
+        // Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
 		String mostOfDoc = "";
 		
 		try {
@@ -67,36 +78,43 @@ public class PigContentAssistant implements IContentAssistProcessor{
 			PigLogger.warn("Not adding dynamic content assist because of BadLocationException with offset " + offset, ble);
 		}
 		
+		Set<String> dynamic_completions = new HashSet<String>();
+		
 		Set<String> imports = RegexUtils.findImports(mostOfDoc);
 		
-		// 3. Scan the entire workspace for macro definitions
-		Set<String> dynamic_completions = new WorkspaceSearcher().findAll(imports, RegexUtils.FIND_DEFINES);
+		long now = System.currentTimeMillis();
+		
+		// When to use the cache instead of searching the workspace - if the same files being searched, and within a given (small) amount of time
+		// this brings the execution time of successive auto completes down from around 50-100 ms to less than 5 ms
+		if (now - LAST_CALL_TIME > AUTO_COMPLETE_CACHE_TIME || ! imports.equals(IMPORTS_USED_IN_CACHE)) {
 
-		// 4. Add macros defined in the current file
+			// Scan the entire workspace for defines (macros, etc) in the imported files
+			CACHED_EXTERNAL_DEFINES = new WorkspaceSearcher().findAll(imports, RegexUtils.FIND_DEFINES);
+			IMPORTS_USED_IN_CACHE = imports;
+			LAST_CALL_TIME = now;
+		}
+		
+		dynamic_completions.addAll(CACHED_EXTERNAL_DEFINES);
+		
+		// Add defines (macros, udfs, etc) from the current file
 		dynamic_completions.addAll(RegexUtils.findDefines(mostOfDoc));
 
-		// 5. Add relations defined in the current file
+		// Add relations defined in the current file
 		dynamic_completions.addAll(RegexUtils.findRelations(mostOfDoc));
 
-		// 6. Add relations defined in SPLIT commands in the current file
+		// Add relations defined in SPLIT commands in the current file
 		dynamic_completions.addAll(RegexUtils.findRelationsFromSplit(mostOfDoc));
-
-		boolean addedMacros = false;
 		
         for (String i : dynamic_completions ) {
         	if (i != null && i.toLowerCase().startsWith(prefix)) {
         		result.add(new CompletionProposal(i, replacementOffset, replacementLength, i.length()));
-        		addedMacros = true;
         	}
         }
 
         ICompletionProposal[] resultArray = result.toArray(new ICompletionProposal[result.size()]);
         
-        // if we didn't add dynamic content, the array is already sorted
-        if (addedMacros) {
-        	Arrays.sort(resultArray, COMPLETION_COMPARATOR);
-        }
-        
+       	Arrays.sort(resultArray, COMPLETION_COMPARATOR);
+		
         return resultArray;
 	}
 
