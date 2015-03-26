@@ -2,7 +2,7 @@
 <feature
       id="org.apache.pig.contrib.eclipse.feature"
       label="Pig-Eclipse"
-      version="1.0.4.qualifier">
+      version="1.1.0.qualifier">
 
    <description url="https://github.com/eyala/pig-eclipse">
       Pig Latin script editor for Eclipse. Provides syntax highlighting, auto-complete, hover info and F3 (open declaration) support for files with .pig extension.
@@ -106,7 +106,7 @@
          id="org.apache.pig.contrib.eclipse"
          download-size="15"
          install-size="15"
-         version="1.0.4.qualifier"
+         version="1.1.0.qualifier"
          unpack="false"/>
 
 </feature>

@@ -1,56 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+	<extension point="org.eclipse.ui.editors">
+		<editor
+			class="org.apache.pig.contrib.eclipse.editors.PigEditor"
+			default="false"
+			extensions="pig"
+			icon="icons/pig.gif"
+			id="org.apache.pig.contrib.eclipse.pigEditor"
+			name="PigEditor" />
+	</extension>
 
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.apache.pig.contrib.eclipse.editors.PigEditor"
-            default="false"
-            extensions="pig"
-            icon="icons/pig.gif"
-            id="org.apache.pig.contrib.eclipse.pigEditor"
-            name="PigEditor">
-      </editor>
-   </extension>
-   <extension
-         point="org.eclipse.ui.contexts">
-      <context
-            id="org.apache.pig.contrib.eclipse.editor.scope"
-            name="PigEditor scope"
-            parentId="org.eclipse.ui.contexts.window">
-      </context>
-   </extension>
-    <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="org.apache.pig.contrib.eclipse.PigDefaultPreferences">
-      </initializer>
-   </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      	<page
-            class="org.apache.pig.contrib.eclipse.PigPreferences"
-            id="org.apache.pig.contrib.eclipse.PigPreferences"
-            name="Pig">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.ui.handlers">
-      <handler
-            class="org.apache.pig.contrib.eclipse.OpenDeclarationHandler"
-            commandId="org.eclipse.jdt.ui.edit.text.java.open.editor">
-      </handler>
-   </extension>
-   <extension
-         point="org.eclipse.ui.menus">
-      <menuContribution
-            allPopups="false"
-            locationURI="menu:navigate?before=additions">
-         <command
-               commandId="org.eclipse.jdt.ui.edit.text.java.open.editor"
-               style="push">
-         </command>
-      </menuContribution>
-   </extension>
+	<extension point="org.eclipse.ui.contexts">
+		<context
+			id="org.apache.pig.contrib.eclipse.editor.scope"
+			name="PigEditor scope"
+			parentId="org.eclipse.ui.contexts.window" />
+	</extension>
+
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer class="org.apache.pig.contrib.eclipse.PigDefaultPreferences" />
+	</extension>
+
+	<extension point="org.eclipse.ui.preferencePages">
+		<page
+			class="org.apache.pig.contrib.eclipse.PigPreferences"
+			id="org.apache.pig.contrib.eclipse.PigPreferences"
+			name="Pig" />
+	</extension>
+
+	<!-- We override the jdt commands instead of adding our own, so that the same keybindings can be used seamlessly in pig files -->
+	<extension point="org.eclipse.ui.handlers">
+		<handler
+			class="org.apache.pig.contrib.eclipse.OpenDeclarationHandler"
+			commandId="org.eclipse.jdt.ui.edit.text.java.open.editor" />
+		<handler
+			class="org.apache.pig.contrib.eclipse.FindReferencesHandler"
+			commandId="org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace" />
+	</extension>
+
+	<extension point="org.eclipse.ui.menus">
+		<menuContribution allPopups="false" locationURI="menu:navigate?before=additions">
+			<command
+				commandId="org.eclipse.jdt.ui.edit.text.java.open.editor"
+				style="push" />
+		</menuContribution>
+	</extension>
 </plugin>

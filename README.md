@@ -1,11 +1,16 @@
 pig-eclipse
 ===========
 
-Apache Pig plugin for Eclipse
+### Features
 
-Does syntax highlighting and simple auto complete, currently supports Pig 0.11 - 0.13.
+* supports Apache Pig Latin 0.11 - 0.14
+* syntax highlighting
+* open declaration (F3) for macros, defines, and UDF's
+* auto complete - defines, relations, reserved words, built in functions
+* hover information (tooltips) for macro definitions, UDF's and built in functions (javadocs)
+* preferences page for colors, Pig version, auto complete behavior and more
 
-## Installation
+### Installation
 
 Install it from this update site:
 
@@ -15,6 +20,7 @@ Pig-Eclipse requires an Eclipse with at least Java 6. It has been tested on Indi
 
 Name your pig scripts with the extension "pig" or add new file associations in the Window->Preferences->File Associations page.
 
-## Latest Release
+### Latest Release
 
-1.0.4, December 27th, 2014 - simple auto complete and Pig 0.13 support
+1.1.0, March 26th, 2015 - Open Declaration, Tooltips, autocomplete and Pig 0.14 support
+
