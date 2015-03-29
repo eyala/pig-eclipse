@@ -14,7 +14,7 @@ pig-eclipse
 
 Install it from this update site:
 
-https://github.com/eyala/pig-eclipse-update-site/raw/master
+http://github.com/eyala/pig-eclipse-update-site/raw/master
 
 Pig-Eclipse requires an Eclipse with at least Java 6. It has been tested on Indigo, Juno, Kepler and Luna.
 
@@ -22,5 +22,5 @@ Name your pig scripts with the extension "pig" or add new file associations in t
 
 ### Latest Release
 
-1.1.0, March 26th, 2015 - Open Declaration, Tooltips, autocomplete and Pig 0.14 support
+1.1.0, March 29th, 2015 - Open Declaration, tooltips, autocomplete and Pig 0.14 support
 

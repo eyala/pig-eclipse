@@ -99,7 +99,7 @@
    </license>
 
    <url>
-      <update label="Pig-Eclipse" url="https://github.com/eyala/pig-eclipse-update-site/raw/master"/>
+      <update label="Pig-Eclipse" url="http://github.com/eyala/pig-eclipse-update-site/raw/master"/>
    </url>
 
    <plugin
