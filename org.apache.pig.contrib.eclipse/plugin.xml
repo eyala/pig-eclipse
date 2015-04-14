@@ -34,16 +34,50 @@
 		<handler
 			class="org.apache.pig.contrib.eclipse.OpenDeclarationHandler"
 			commandId="org.eclipse.jdt.ui.edit.text.java.open.editor" />
+	
+		<!-- We don't override this, because toggle comment uses the deprecated action framework -->		
 		<handler
-			class="org.apache.pig.contrib.eclipse.FindReferencesHandler"
-			commandId="org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace" />
+			class="org.apache.pig.contrib.eclipse.ToggleCommentHandler"
+			commandId="org.apache.pig.contrib.eclipse.toggle.comment" />
 	</extension>
 
+	<extension point="org.eclipse.ui.commands">
+		<!-- not the same as the category in category.xml, this is so people can modify the keybindings -->
+		<category
+      		id="org.apache.pig.contrib.eclipse"
+        	name="Pig" 
+        	description="Pig-Eclipse Commands">
+  		</category>
+		
+		<command
+            description="Toggle Pig Comment"
+            id="org.apache.pig.contrib.eclipse.toggle.comment"
+            name="Toggle Comment"
+            categoryId="org.apache.pig.contrib.eclipse">
+		</command>
+   </extension>
+   
+   <extension point="org.eclipse.ui.bindings">
+      <key
+            commandId="org.apache.pig.contrib.eclipse.toggle.comment"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="Shift+Ctrl+C">
+      </key>
+   </extension>
+   
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution allPopups="false" locationURI="menu:navigate?before=additions">
 			<command
 				commandId="org.eclipse.jdt.ui.edit.text.java.open.editor"
 				style="push" />
 		</menuContribution>
+		
+		<!-- The source menu uses the deprecated actionset framework so we add it to the edit menu -->
+		<menuContribution allPopups="false" locationURI="menu:edit?before=additions">
+			<command
+				commandId="org.apache.pig.contrib.eclipse.toggle.comment"
+				style="push" />
+		</menuContribution>
+		
 	</extension>
 </plugin>
