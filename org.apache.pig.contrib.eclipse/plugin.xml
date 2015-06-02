@@ -35,6 +35,10 @@
 			class="org.apache.pig.contrib.eclipse.OpenDeclarationHandler"
 			commandId="org.eclipse.jdt.ui.edit.text.java.open.editor" />
 	
+		<handler
+			class="org.apache.pig.contrib.eclipse.FindReferencesHandler"
+			commandId="org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace" />
+	
 		<!-- We don't override this, because toggle comment uses the deprecated action framework -->		
 		<handler
 			class="org.apache.pig.contrib.eclipse.ToggleCommentHandler"
@@ -76,6 +80,13 @@
 		<menuContribution allPopups="false" locationURI="menu:edit?before=additions">
 			<command
 				commandId="org.apache.pig.contrib.eclipse.toggle.comment"
+				style="push" />
+		</menuContribution>
+
+		<!-- The search menu probably also uses the actionset framework, so we add this to navigate -->
+		<menuContribution allPopups="false" locationURI="menu:navigate?before=additions">
+			<command
+				commandId="org.eclipse.jdt.ui.edit.text.java.search.references.in.workspace"
 				style="push" />
 		</menuContribution>
 		
