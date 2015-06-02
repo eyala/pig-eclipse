@@ -1,30 +1,24 @@
 package org.apache.pig.contrib.eclipse;
 
-import java.util.Set;
-
 import org.apache.pig.contrib.eclipse.editors.PigEditor;
 import org.apache.pig.contrib.eclipse.utils.PigWordDetector;
-import org.apache.pig.contrib.eclipse.utils.RegexUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
-import org.eclipse.search.internal.ui.text.FileSearchQuery;
 import org.eclipse.search.ui.ISearchQuery;
 import org.eclipse.search.ui.NewSearchUI;
 import org.eclipse.search.ui.text.FileTextSearchScope;
 import org.eclipse.search.ui.text.TextSearchQueryProvider;
+import org.eclipse.search.ui.text.TextSearchQueryProvider.TextSearchInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 
 public class FindReferencesHandler extends AbstractHandler  {
 
+	// TODO: this should be dynamically calculated to search all the files associated with PigEditor in the preferences
 	private static final String[] PIG_PATTERNS = { "*.pig" };
 
 	@Override
@@ -48,22 +42,7 @@ public class FindReferencesHandler extends AbstractHandler  {
 					
 					if (word != null && ! word.trim().isEmpty()) {
 						try {
-							// Get all of the current document (up to this point)
-							String mostOfDoc = "";
-
-							try {
-								mostOfDoc = document.get(0, offset);
-							} catch (BadLocationException ble) {
-								PigLogger.warn("BadLocationException while getting document from start to " + offset, ble); // this shouldn't happen, but does
-							}
-
-							Set<String> imports = RegexUtils.findImports(mostOfDoc);
-							
-							FileTextSearchScope scope= FileTextSearchScope.newWorkspaceScope(PIG_PATTERNS, false);
-							
-							// discouraged access, but works
-							// use TextSearchQueryProvider.getPreferred().createQuery instead
-							ISearchQuery query = new FileSearchQuery(word, false, true, scope);
+							ISearchQuery query = TextSearchQueryProvider.getPreferred().createQuery(new PigSearchInput(word)); 
 							
 							NewSearchUI.runQueryInBackground(query);
 						} catch (IllegalArgumentException iae) {
@@ -86,5 +65,35 @@ public class FindReferencesHandler extends AbstractHandler  {
 		
 		return null;
 	}
+	
+	private static class PigSearchInput extends TextSearchInput {
 
+		private final String fSearchText;
+
+		// pros - gets rid of some false positives
+		// cons - the label of the search results becomes an ugly regex
+		public PigSearchInput(String searchText) {
+			fSearchText= "[^\\w](" + searchText + ")\\s*\\(";
+		}
+
+		public String getSearchText() {
+			return fSearchText;
+		}
+
+		public boolean isCaseSensitiveSearch() {
+			return true;
+		}
+
+		public boolean isRegExSearch() {
+			return true;
+		}
+
+		public boolean isWholeWordSearch() {
+			return false;
+		}
+
+		public FileTextSearchScope getScope() {
+			return FileTextSearchScope.newWorkspaceScope(PIG_PATTERNS, false);
+		}
+	}
 }
