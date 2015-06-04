@@ -18,9 +18,6 @@ import org.eclipse.ui.texteditor.IDocumentProvider;
 
 public class FindReferencesHandler extends AbstractHandler  {
 
-	// TODO: this should be dynamically calculated to search all the files associated with PigEditor in the preferences
-	private static final String[] PIG_PATTERNS = { "*.pig" };
-
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		IEditorPart activeEditor = HandlerUtil.getActiveEditor(event);
@@ -93,7 +90,7 @@ public class FindReferencesHandler extends AbstractHandler  {
 		}
 
 		public FileTextSearchScope getScope() {
-			return FileTextSearchScope.newWorkspaceScope(PIG_PATTERNS, false);
+			return FileTextSearchScope.newWorkspaceScope(PigEditor.getPigFileAssociations(), false);
 		}
 	}
 }
