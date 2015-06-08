@@ -1,11 +1,16 @@
 package org.apache.pig.contrib.eclipse.utils;
 
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.pig.contrib.eclipse.PigLogger;
+import org.eclipse.core.resources.ResourcesPlugin;
 
 public class RegexUtils {
 
@@ -19,7 +24,7 @@ public class RegexUtils {
 	public static final Pattern FIND_DEFINES = Pattern.compile(DEFINE_PREFIX + "(\\w+)");
 	
 	// Used for finding imports for searching workspace
-	private static final Pattern FIND_IMPORTS = Pattern.compile("(?i)IMPORT\\s+'(.+?)'");
+	public static final Pattern FIND_IMPORTS = Pattern.compile("(?i)IMPORT\\s+'(.+?)'");
 
 	// Used for finding some of the relations defined (not those in SPLIT; also suggests those within macros that aren't in scope)
 	private static final Pattern FIND_RELATIONS = Pattern.compile(";?\\s*(\\w+?)\\s*=");
@@ -32,8 +37,8 @@ public class RegexUtils {
 
 	 //  Captures only the file name, ignoring relative and absolute paths.
 	 //  We don't want to use File.separator because the editor might run on a different system from the Pig script.
-	private static final Pattern GET_FILENAME_FROM_IMPORT = Pattern.compile("(?:.*[\\/\\\\])?(.+)");
-
+	public static final Pattern GET_FILENAME_FROM_IMPORT = Pattern.compile("(?:.*[\\/\\\\])?(.+)");
+	
 	/**
 	 * Return the imports defined in a given string
 	 */

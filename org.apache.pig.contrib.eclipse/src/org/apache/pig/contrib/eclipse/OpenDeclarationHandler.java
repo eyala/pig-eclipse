@@ -133,7 +133,7 @@ public class OpenDeclarationHandler extends AbstractHandler {
 			}
 
 			// Scan all of the current document (up to this point) for import statements, to prune the list of pig files to read
-			Set<String> imports = RegexUtils.findImports(mostOfDoc);
+			Set<String> imports = WorkspaceSearcher.findRecursiveImports(mostOfDoc);
 
 			// Try to find a matching macro definition elsewhere in the workspace
 			return new WorkspaceSearcher().find(imports, macro_defines);

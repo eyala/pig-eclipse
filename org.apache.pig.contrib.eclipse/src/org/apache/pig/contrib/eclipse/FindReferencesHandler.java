@@ -48,17 +48,6 @@ public class FindReferencesHandler extends AbstractHandler  {
 					
 					if (word != null && ! word.trim().isEmpty()) {
 						try {
-							// Get all of the current document (up to this point)
-							String mostOfDoc = "";
-
-							try {
-								mostOfDoc = document.get(0, offset);
-							} catch (BadLocationException ble) {
-								PigLogger.warn("BadLocationException while getting document from start to " + offset, ble); // this shouldn't happen, but does
-							}
-
-							Set<String> imports = RegexUtils.findImports(mostOfDoc);
-							
 							FileTextSearchScope scope= FileTextSearchScope.newWorkspaceScope(PIG_PATTERNS, false);
 							
 							// discouraged access, but works
@@ -69,9 +58,6 @@ public class FindReferencesHandler extends AbstractHandler  {
 						} catch (IllegalArgumentException iae) {
 							// TODO Auto-generated catch block
 							iae.printStackTrace();
-						} catch (CoreException ce) {
-							PigLogger.warn("Couldn't create query for " + word, ce);
-							ce.printStackTrace();
 						}
 					}
 				} else {
