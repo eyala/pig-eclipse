@@ -141,11 +141,13 @@ public class WorkspaceSearcher {
 			}
 		}
 		
+		result.addAll(newNames);
+		
+		// Keep recursive call as last command for compiler optimization
 		if(newNames.size() > 0)
 		{
 			getRecursiveImports(newNames, result, visited);
 		}
-		result.addAll(newNames);
 	}
 
 }
