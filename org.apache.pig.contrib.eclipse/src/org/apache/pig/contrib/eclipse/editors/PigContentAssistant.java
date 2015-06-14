@@ -80,7 +80,7 @@ public class PigContentAssistant implements IContentAssistProcessor{
 		
 		Set<String> dynamic_completions = new HashSet<String>();
 		
-		Set<String> imports = RegexUtils.findImports(mostOfDoc);
+		Set<String> imports = WorkspaceSearcher.findRecursiveImports(mostOfDoc);
 		
 		long now = System.currentTimeMillis();
 		

@@ -3,6 +3,7 @@ package org.apache.pig.contrib.eclipse.utils;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.pig.contrib.eclipse.PigLogger;
@@ -102,4 +103,51 @@ public class WorkspaceSearcher {
 		
 		return visitor.getResult();
 	}
+	
+	/**
+	 * Return the imports defined in a given string and all imports in hierarchy
+	 */
+	public static Set<String> findRecursiveImports(String text) {
+		
+		Set<String> result = RegexUtils.findImports(text);
+		Set<String> visited = new HashSet<String>();
+		getRecursiveImports(result, result, visited);
+		return result;
+	}
+	
+	private static void getRecursiveImports(Set<String> newFiles, Set<String> result, Set<String> visited) {
+		Set<String> filtered = new HashSet<String>();
+		for(String s : newFiles)
+		{
+			if(!visited.contains(s))
+			{
+				filtered.add(s);
+				visited.add(s);
+			}
+		}
+		
+		Set<String> rawNewNames = new WorkspaceSearcher().findAll(filtered, RegexUtils.FIND_IMPORTS);
+		Set<String> newNames = new HashSet<String>();
+		
+		for (String i : rawNewNames) 
+		{
+			Matcher m = RegexUtils.GET_FILENAME_FROM_IMPORT.matcher(i);
+			
+			if (!m.find()) 
+			{
+				PigLogger.info("Encountered unexpected import string: " + i);
+			} else {
+				newNames.add(m.group(1));
+			}
+		}
+		
+		result.addAll(newNames);
+		
+		// Keep recursive call as last command for compiler optimization
+		if(newNames.size() > 0)
+		{
+			getRecursiveImports(newNames, result, visited);
+		}
+	}
+
 }
