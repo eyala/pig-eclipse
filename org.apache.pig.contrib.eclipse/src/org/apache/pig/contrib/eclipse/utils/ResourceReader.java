@@ -28,13 +28,13 @@ public class ResourceReader {
 	 * The 1st field in these maps is the selected pig version, and the 2nd field is which file has the last change in that part of pig
 	 */
 	static {
-		String[][] last_change_in_data_types = {{"0.11", "0.11"}, {"0.12", "0.12"}, {"0.13", "0.12"}, {"0.14", "0.12"}};
+		String[][] last_change_in_data_types = {{"0.11", "0.11"}, {"0.12", "0.12"}, {"0.13", "0.12"}, {"0.14", "0.12"}, {"0.15", "0.12"}};
 		LAST_CHANGE_IN_DATA_TYPES = makeMap(last_change_in_data_types);
 		
-		String[][] last_change_in_builtins = {{"0.11", "0.11"}, {"0.12", "0.12"}, {"0.13", "0.13"}, {"0.14", "0.14"}};
+		String[][] last_change_in_builtins = {{"0.11", "0.11"}, {"0.12", "0.12"}, {"0.13", "0.13"}, {"0.14", "0.14"}, {"0.15", "0.15"}};
 		LAST_CHANGE_IN_BUILTINS = makeMap(last_change_in_builtins);
 
-		String[][] last_change_in_keywords = {{"0.11", "0.11"}, {"0.12", "0.12"}, {"0.13", "0.12"}, {"0.14", "0.12"}};
+		String[][] last_change_in_keywords = {{"0.11", "0.11"}, {"0.12", "0.12"}, {"0.13", "0.12"}, {"0.14", "0.12"}, {"0.15", "0.12"}};
 		LAST_CHANGE_IN_KEYWORDS = makeMap(last_change_in_keywords);
 	}
 	
