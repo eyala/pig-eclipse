@@ -50,6 +50,10 @@ public class ResourceReader {
 		return read("keywords_" + LAST_CHANGE_IN_KEYWORDS.get(version) + ".txt");
 	}
 
+	public static Set<String> readTooltips(String version) {
+		return read("tooltips_0.14" + ".txt");
+	}
+	
 	/**
 	 * Given a path, reads a file, removing duplicate lines
 	 */
