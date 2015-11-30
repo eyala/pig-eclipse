@@ -1,7 +1,9 @@
 package org.apache.pig.contrib.eclipse;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +27,7 @@ public class OpenDeclarationHandler extends AbstractHandler {
 
 	// Used for searching for builtin functions
 	private static Set<String> BUILTINS;
+	private static Map<String, String> TOOLTIPS;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -79,12 +82,17 @@ public class OpenDeclarationHandler extends AbstractHandler {
 			if (word.indexOf(".") != -1) {
 				return new WorkspaceSearcher().findUdf(word, null);
 			}
-			
+
+			// If it is a builtin function, add its package name and search for it
+			if (TOOLTIPS.containsKey(word)) {
+				return new SourceSearchResult(0,0,null,TOOLTIPS.get(word));
+			}
+
 			// If it is a builtin function, add its package name and search for it
 			if (BUILTINS.contains(word)) {
 				return new WorkspaceSearcher().findUdf("org.apache.pig.builtin." + word, null);
 			}
-			
+
 			// Prepare a regular expression for finding macro definitions for the current word 
 			Pattern macro_defines = RegexUtils.findMacroDefinesForHoverInfoPattern(word);
 
@@ -149,6 +157,15 @@ public class OpenDeclarationHandler extends AbstractHandler {
 		
 		for (String b : builtins) {
 			BUILTINS.add(b);
+		}
+	}
+	
+	public static void setTooltips(Collection<String> builtins) {
+		TOOLTIPS = new HashMap<String, String>();
+		
+		for (String b : builtins) {
+			int equals = b.indexOf("=");
+			TOOLTIPS.put(b.substring(0, equals), b.substring(equals+1));
 		}
 	}
 }
