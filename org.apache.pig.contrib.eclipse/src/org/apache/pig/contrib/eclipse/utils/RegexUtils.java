@@ -1,16 +1,11 @@
 package org.apache.pig.contrib.eclipse.utils;
 
-import java.io.IOException;
-import java.net.URI;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.pig.contrib.eclipse.PigLogger;
-import org.eclipse.core.resources.ResourcesPlugin;
 
 public class RegexUtils {
 

@@ -1,8 +1,5 @@
 package org.apache.pig.contrib.eclipse;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -27,7 +24,9 @@ public class OpenDeclarationHandler extends AbstractHandler {
 
 	// Used for searching for builtin functions
 	private static Set<String> BUILTINS;
-	private static Map<String, String> TOOLTIPS;
+	
+	// Used to provide tooltips for keywords from the Pig documentation
+	private static Map<String, String> KEYWORD_TOOLTIPS;
 	
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
@@ -83,12 +82,14 @@ public class OpenDeclarationHandler extends AbstractHandler {
 				return new WorkspaceSearcher().findUdf(word, null);
 			}
 
-			// If it is a builtin function, add its package name and search for it
-			if (TOOLTIPS.containsKey(word)) {
-				return new SourceSearchResult(0,0,null,TOOLTIPS.get(word));
+			// If it is a keyword, use the keywords tooltip map
+			String lowerCaseWord = word.toLowerCase();
+			if (KEYWORD_TOOLTIPS.containsKey(lowerCaseWord)) {
+				return new SourceSearchResult(offset,0,null,KEYWORD_TOOLTIPS.get(lowerCaseWord));
 			}
 
 			// If it is a builtin function, add its package name and search for it
+			// TODO: fallback to using builtins_map
 			if (BUILTINS.contains(word)) {
 				return new WorkspaceSearcher().findUdf("org.apache.pig.builtin." + word, null);
 			}
@@ -151,21 +152,12 @@ public class OpenDeclarationHandler extends AbstractHandler {
 		
 		return null;
 	}
-	
-	public static void setBuiltins(Collection<String> builtins) {
-		BUILTINS = new HashSet<String>();
-		
-		for (String b : builtins) {
-			BUILTINS.add(b);
-		}
+
+	public static void setBuiltins(Set<String> builtins) {
+		BUILTINS = builtins;
 	}
 	
-	public static void setTooltips(Collection<String> builtins) {
-		TOOLTIPS = new HashMap<String, String>();
-		
-		for (String b : builtins) {
-			int equals = b.indexOf("=");
-			TOOLTIPS.put(b.substring(0, equals), b.substring(equals+1));
-		}
+	public static void setKeywordTooltips(Map<String,String> keywords) {
+		KEYWORD_TOOLTIPS = keywords;
 	}
 }

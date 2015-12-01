@@ -2,6 +2,7 @@ package org.apache.pig.contrib.eclipse.editors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.pig.contrib.eclipse.OpenDeclarationHandler;
@@ -32,7 +33,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 	private static Set<String> KEYWORDS;
 	private static Set<String> BUILTIN_FUN;
 	private static Set<String> DATA_TYPES;
-	private static Set<String> TOOLTIPS;
+	private static Map<String, String> KEYWORD_TOOLTIPS;
 
 	/**
 	 * This function loads the correct resources for all the classes that need them
@@ -41,13 +42,13 @@ public class PigScriptScanner extends RuleBasedScanner {
 		KEYWORDS = ResourceReader.readKeywords(version);
 		BUILTIN_FUN = ResourceReader.readBuiltIns(version);
 		DATA_TYPES = ResourceReader.readDataTypes(version);
-		TOOLTIPS = ResourceReader.readTooltips(version);
+		KEYWORD_TOOLTIPS = ResourceReader.readKeywordTooltips(version, KEYWORDS);
 		
 		PigContentAssistant.setBuiltins(BUILTIN_FUN);
 		PigContentAssistant.setKeywords(KEYWORDS);
 		
 		OpenDeclarationHandler.setBuiltins(BUILTIN_FUN);
-		OpenDeclarationHandler.setTooltips(TOOLTIPS);
+		OpenDeclarationHandler.setKeywordTooltips(KEYWORD_TOOLTIPS);
 	}
 		
 	public PigScriptScanner() {

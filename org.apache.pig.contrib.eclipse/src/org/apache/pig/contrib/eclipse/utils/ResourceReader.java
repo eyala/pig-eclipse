@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,26 +41,56 @@ public class ResourceReader {
 	}
 	
 	public static Set<String> readDataTypes(String version) {
-		return read("data_types_" + LAST_CHANGE_IN_DATA_TYPES.get(version) + ".txt");
+		return readSet("data_types_" + LAST_CHANGE_IN_DATA_TYPES.get(version) + ".txt");
 	}
 
 	public static Set<String> readBuiltIns(String version) {
-		return read("builtin_fun_" + LAST_CHANGE_IN_BUILTINS.get(version) + ".txt");
+		return readSet("builtin_fun_" + LAST_CHANGE_IN_BUILTINS.get(version) + ".txt");
 	}
 
 	public static Set<String> readKeywords(String version) {
-		return read("keywords_" + LAST_CHANGE_IN_KEYWORDS.get(version) + ".txt");
+		return readSet("keywords_" + LAST_CHANGE_IN_KEYWORDS.get(version) + ".txt");
 	}
 
-	public static Set<String> readTooltips(String version) {
-		return read("tooltips_0.14" + ".txt");
+	public static Map<String, String> readKeywordTooltips(String version, Set<String> keywords) {
+		return readMap("keyword_tooltips_" + LAST_CHANGE_IN_KEYWORDS.get(version) + ".txt", keywords);
 	}
-	
+
 	/**
 	 * Given a path, reads a file, removing duplicate lines
 	 */
-	private static Set<String> read(String path) {
-		Set<String> result= new HashSet<String>();
+	private static Set<String> readSet(String path) {
+		return new HashSet<String>(read(path));
+	}
+
+	/**
+	 * Given a path and a map of keys, reads lines that match a key
+	 */
+	private static Map<String, String> readMap(String path, Set<String> keys) {
+		Map<String, String> result = new HashMap<String, String>();
+		
+		List<String> list = read(path);
+		
+		for (String line : list) {
+			int equals = line.indexOf('=');
+			
+			if (equals > 0) {
+				String keyword = line.substring(0, equals);
+				
+				if (keys.contains(keyword)) {
+					result.put(keyword, line.substring(equals+1));
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Given a path, reads a file into a list, ignoring # style comments and blank lines
+	 */
+	private static List<String> read(String path) {
+		List<String> result= new ArrayList<String>();
 		
 		BufferedReader reader = null;
 		
@@ -68,13 +100,13 @@ public class ResourceReader {
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				line = line.trim();
-				if (line.length() != 0) {
+				if (line.length() != 0 && line.charAt(0) != '#') {
 					result.add(line);
 				}
 			}
 			
 		} catch (IOException e) {
-			System.err.println("Failed to read resources: " + path);
+			System.err.println("Failed to read resource: " + path);
 			e.printStackTrace();
 		} finally {
 			if (reader != null) {
