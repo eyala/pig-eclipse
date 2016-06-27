@@ -6,8 +6,8 @@ cube=Performs cube/rollup operations.Cube operation computes aggregates for all 
 filter=Selects tuples from a relation based on some condition.<br><h4>Syntax</h4>alias = FILTER alias &nbsp;BY expression;
 foreach=Generates data transformations based on columns of data.<br><h4>Syntax</h4>alias &nbsp;= FOREACH { block | nested_block };
 group=Groups the data in one or more relations.<a name="Syntax-N1344A"></a><br><h4>Syntax</h4>alias = GROUP alias { ALL | BY expression}&nbsp;[, alias ALL | BY expression …]  [USING 'collected' | 'merge'] [PARTITION BY partitioner] [PARALLEL n];
-import=See <a href="http://pig.apache.org/docs/r0.14.0/cont.html#import-macros">IMPORT (macros)</a>See <a href="http://pig.apache.org/docs/r0.14.0/cont.html#import-macros">IMPORT (macros)</a>Performs an inner join of two or more relations based on common field values.
-join= (outer)Performs an outer join of two relations based on common field values.<br><h4>Syntax</h4>alias = JOIN left-alias BY left-alias-column [LEFT|RIGHT|FULL] [OUTER], right-alias BY right-alias-column 
+import=Import macros defined in a separate file.<a name="Syntax-N103B4"></a><h4>Syntax</h4>IMPORT 'file-with-macro'; 
+join=Performs an outer join of two relations based on common field values.<br><h4>Syntax</h4>alias = JOIN left-alias BY left-alias-column [LEFT|RIGHT|FULL] [OUTER], right-alias BY right-alias-column 
 limit=Limits the number of output tuples.<br><h4>Syntax</h4>alias = LIMIT alias &nbsp;n;
 load=Loads data from the file system.<br><h4>Syntax</h4>LOAD 'data' [USING function] [AS schema];&nbsp; &nbsp; &nbsp; &nbsp; 
 mapreduce=Executes native MapReduce jobs inside a Pig script.<br><h4>Syntax</h4>alias1 = MAPREDUCE 'mr.jar' STORE alias2 INTO 
@@ -18,5 +18,5 @@ split=Partitions a relation into two or more relations.<br><h4>Syntax</h4>SPLIT 
 store=Stores or saves results to the file system.<br><h4>Syntax</h4>STORE alias INTO 'directory' [USING function];
 stream=Sends data to an external script or program.<br><h4>Syntax</h4>alias = STREAM alias [, alias …] THROUGH {`command` | cmd_alias }&nbsp;[AS schema] ;
 union=Computes the union of two or more relations.<br><h4>Syntax</h4>alias = UNION [ONSCHEMA] alias, alias [, alias …];
-define= (UDFs, streaming)Assigns an alias to a UDF or streaming command.<h4>Syntax: UDF and streaming</h4>DEFINE alias {function | [`command` [input] [output] [ship] [cache] [stderr] ] };
+define=Assigns an alias to a UDF or streaming command.<h4>Syntax: UDF and streaming</h4>DEFINE alias {function | [`command` [input] [output] [ship] [cache] [stderr] ] };
 register=Registers a JAR file so that the UDFs in the file can be used.<br><h4>Syntax</h4>REGISTER path;

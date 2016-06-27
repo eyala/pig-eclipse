@@ -27,7 +27,10 @@ public class OpenDeclarationHandler extends AbstractHandler {
 	
 	// Used to provide tooltips for keywords from the Pig documentation
 	private static Map<String, String> KEYWORD_TOOLTIPS;
-	
+
+	// Used to provide tooltips for builtin functions if the Pig jars are not loaded
+	private static Map<String, String> BUILTIN_TOOLTIPS;
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		
@@ -89,9 +92,14 @@ public class OpenDeclarationHandler extends AbstractHandler {
 			}
 
 			// If it is a builtin function, add its package name and search for it
-			// TODO: fallback to using builtins_map
 			if (BUILTINS.contains(word)) {
-				return new WorkspaceSearcher().findUdf("org.apache.pig.builtin." + word, null);
+				SearchResult foundUdf = new WorkspaceSearcher().findUdf("org.apache.pig.builtin." + word, null);
+
+				if (foundUdf == null && BUILTIN_TOOLTIPS.containsKey(word)) {
+					return new SourceSearchResult(offset,0,null,BUILTIN_TOOLTIPS.get(word));
+				}
+				
+				return foundUdf;
 			}
 
 			// Prepare a regular expression for finding macro definitions for the current word 
@@ -153,11 +161,9 @@ public class OpenDeclarationHandler extends AbstractHandler {
 		return null;
 	}
 
-	public static void setBuiltins(Set<String> builtins) {
+	public static void setResources(Set<String> builtins, Map<String,String> keywords, Map<String,String> builtin_tooltips) {
 		BUILTINS = builtins;
-	}
-	
-	public static void setKeywordTooltips(Map<String,String> keywords) {
 		KEYWORD_TOOLTIPS = keywords;
+		BUILTIN_TOOLTIPS = builtin_tooltips;
 	}
 }

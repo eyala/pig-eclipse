@@ -162,13 +162,10 @@ public class PigContentAssistant implements IContentAssistProcessor{
 		return "";
 	}
 
-	public static void setKeywords(Collection<String> k) {
-		KEYWORDS = k;
-		prepareCompletionsArray();
-	}
-	
-	public static void setBuiltins(Collection<String> b) {
-		BUILTINS = b;
+	public static void setResources(Collection<String> keywords, Collection<String> builtins) {
+		KEYWORDS = keywords;
+		BUILTINS = builtins;
+		
 		prepareCompletionsArray();
 	}
 

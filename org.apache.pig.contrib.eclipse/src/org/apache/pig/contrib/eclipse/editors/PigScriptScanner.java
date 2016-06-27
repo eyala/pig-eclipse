@@ -34,6 +34,7 @@ public class PigScriptScanner extends RuleBasedScanner {
 	private static Set<String> BUILTIN_FUN;
 	private static Set<String> DATA_TYPES;
 	private static Map<String, String> KEYWORD_TOOLTIPS;
+	private static Map<String, String> BUILTIN_TOOLTIPS;
 
 	/**
 	 * This function loads the correct resources for all the classes that need them
@@ -43,12 +44,10 @@ public class PigScriptScanner extends RuleBasedScanner {
 		BUILTIN_FUN = ResourceReader.readBuiltIns(version);
 		DATA_TYPES = ResourceReader.readDataTypes(version);
 		KEYWORD_TOOLTIPS = ResourceReader.readKeywordTooltips(version, KEYWORDS);
+		BUILTIN_TOOLTIPS = ResourceReader.readBuiltInTooltips(version, BUILTIN_FUN);
 		
-		PigContentAssistant.setBuiltins(BUILTIN_FUN);
-		PigContentAssistant.setKeywords(KEYWORDS);
-		
-		OpenDeclarationHandler.setBuiltins(BUILTIN_FUN);
-		OpenDeclarationHandler.setKeywordTooltips(KEYWORD_TOOLTIPS);
+		PigContentAssistant.setResources(KEYWORDS, BUILTIN_FUN);
+		OpenDeclarationHandler.setResources(BUILTIN_FUN, KEYWORD_TOOLTIPS, BUILTIN_TOOLTIPS);
 	}
 		
 	public PigScriptScanner() {
