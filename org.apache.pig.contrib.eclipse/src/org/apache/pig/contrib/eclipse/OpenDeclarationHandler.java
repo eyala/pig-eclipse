@@ -95,7 +95,7 @@ public class OpenDeclarationHandler extends AbstractHandler {
 			if (BUILTINS.contains(word)) {
 				SearchResult foundUdf = new WorkspaceSearcher().findUdf("org.apache.pig.builtin." + word, null);
 
-				if (foundUdf == null && BUILTIN_TOOLTIPS.containsKey(word)) {
+				if ((foundUdf == null || foundUdf.getText() == null) && BUILTIN_TOOLTIPS.containsKey(word)) {
 					return new SourceSearchResult(offset,0,null,BUILTIN_TOOLTIPS.get(word));
 				}
 				

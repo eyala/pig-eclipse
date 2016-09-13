@@ -24,5 +24,5 @@ Name your pig scripts with the extension "pig" or add new file associations in t
 
 ### Latest Release
 
-1.1.2, June 30th, 2016 - Add hover information for keywords, Pig 0.15 and 0.16 support, and fix of issue #6 (thanks to brahamim)
+1.1.2, September 13th, 2016 - Add hover information for keywords, Pig 0.15 and 0.16 support, and fix of issue #6 (thanks to brahamim)
 
